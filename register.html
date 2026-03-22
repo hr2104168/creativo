@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Creativo — Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/auth.css"/>
 </head>
 <body>
 
@@ -11,42 +13,81 @@
 
     <!-- Left side -->
     <div class="left-panel">
-      <h1>creativo</h1>
-      <p>where creativity finds its voice</p>
+      <div class="left-inner-circle"></div>
+
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M4 15 Q7 6 10 4 Q13 6 16 15" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <circle cx="10" cy="4" r="1.5" fill="white" opacity="0.8"/>
+            <path d="M6 18 Q10 16 14 18" stroke="white" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+          </svg>
+        </div>
+        <span class="brand-name">creativo</span>
+      </div>
+
+      <div class="left-quote">
+        <span class="quote-mark">"</span>
+        <p class="quote-text">Fill your paper with the breathings of your heart.</p>
+        <p class="quote-author">— William Wordsworth</p>
+      </div>
+
+      <div class="left-tags">
+        <span class="left-tag">poetry</span>
+        <span class="left-tag">storytelling</span>
+        <span class="left-tag">inspiration</span>
+        <span class="left-tag">prompts</span>
+        <span class="left-tag">reflection</span>
+      </div>
     </div>
 
     <!-- Right side: register form -->
     <div class="right-panel">
+      <div class="form-wrap">
 
-      <h2>Join Creativo</h2>
-      <p>Already have an account? <a href="index.html">Sign in</a></p>
+        <h2 class="form-heading">Join Creativo</h2>
+        <p class="form-sub">Already have an account? <a href="index.html">Sign in</a></p>
 
-      <form id="register-form">
+        <div class="alert error"   id="reg-error"></div>
+        <div class="alert success" id="reg-success"></div>
 
-        <div class="field">
-          <label for="reg-username">Username</label>
-          <input type="text" id="reg-username" placeholder="e.g. luna.m" />
-        </div>
+        <form id="register-form">
 
-        <div class="field">
-          <label for="reg-email">Email</label>
-          <input type="email" id="reg-email" placeholder="you@email.com" />
-        </div>
+          <div class="field">
+            <label for="reg-username">Username</label>
+            <input type="text" id="reg-username" placeholder="e.g. Abdulrahman S." />
+            <p class="field-hint">This is how others will see you.</p>
+          </div>
 
-        <div class="field">
-          <label for="reg-password">Password</label>
-          <input type="password" id="reg-password" placeholder="password" />
-        </div>
+          <div class="field">
+            <label for="reg-email">Email</label>
+            <input type="email" id="reg-email" placeholder="you123@email.com" />
+          </div>
 
-        <div class="field">
-          <label for="reg-confirm">Confirm Password</label>
-          <input type="password" id="reg-confirm" placeholder="confirm password" />
-        </div>
+          <div class="field">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" placeholder="••••••••" />
+            <div class="strength-bar">
+              <div class="strength-segment" id="s1"></div>
+              <div class="strength-segment" id="s2"></div>
+              <div class="strength-segment" id="s3"></div>
+              <div class="strength-segment" id="s4"></div>
+            </div>
+            <p class="strength-label" id="strength-label">Min. 6 characters</p>
+          </div>
 
-        <button type="submit">Create account</button>
+          <div class="field">
+            <label for="reg-confirm">Confirm Password</label>
+            <input type="password" id="reg-confirm" placeholder="••••••••" />
+          </div>
 
-      </form>
+          <button type="submit" class="btn-primary">Create my account</button>
 
+        </form>
+
+        <p class="form-footer">By joining you agree to our Terms of Service and Privacy Policy.</p>
+
+      </div>
     </div>
 
   </div>
