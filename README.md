@@ -5,8 +5,8 @@ micro-poems, brief stories, inspirational thoughts, and creative prompts.
 
 ## Team Members
 
-|     Name        |   QUID    |       Role                        |
-|---------------  |-----------|-----------------------------------|
+| Name            |   QUID    | Role                              |
+|-----------------|-----------|-----------------------------------|
 | Hanin M. Said   | 202104168 | Authentication (Register & Login) |
 | Mahajuba Rahman | 202311830 | News Feed                         |
 | Ashley Danoy    | 202304384 | Posts (Create, Like, Comment)     |
