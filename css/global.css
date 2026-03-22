@@ -1,0 +1,10 @@
+:root {
+  --color-primary: #7F77DD;
+  --color-primary-light: #EEEDFE;
+  --color-primary-dark: #3C3489;
+  --color-blush: #F4C0D1;
+  --color-cream: #FAF8F5;
+  --color-ink: #2C2C2A;
+  --font-body: 'Georgia', serif;
+  --font-ui: system-ui, sans-serif;
+}
