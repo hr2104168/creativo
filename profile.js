@@ -1,8 +1,6 @@
-// ============================================
+
 // CREATIVO - User Profile Module
 // Handles Profile Data with localStorage
-// ============================================
-
 // Storage Keys
 const STORAGE_KEYS = {
     USERS: 'creativo_users',
@@ -13,9 +11,7 @@ const STORAGE_KEYS = {
     SESSION: 'creativo_session'
 };
 
-// ============================================
 // Storage Manager
-// ============================================
 
 class ProfileStorage {
     static get(key) {
@@ -438,7 +434,7 @@ class ProfileManager {
             return false;
         }
         
-        // Check if username is taken (by other user)
+        // Check if username is taken 
         const usernameTaken = users.some(u => u.id !== this.currentUser.id && u.username === username);
         if (usernameTaken) {
             this.showMessage('Username already taken. Please choose another.', 'error');
@@ -553,9 +549,8 @@ class ProfileManager {
         }, 3000);
     }
 
-    // ============================================
     // Event Handlers
-    // ============================================
+  
 
     attachEvents() {
         // Edit Profile Button
@@ -711,9 +706,7 @@ class ProfileManager {
     }
 }
 
-// ============================================
 // Initialize the Application
-// ============================================
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', () => {
