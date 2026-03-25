@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREATIVO · User Profile</title>
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="logo">CREATIVO</div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">🏠 Feed</a>
+                <a href="#" class="nav-link active">👤 Profile</a>
+                <button class="btn btn-outline" id="logoutBtn">Log out</button>
+            </div>
+        </nav>
+
+        <!-- Main Profile Layout -->
+        <div class="profile-layout">
+            <!-- Left Sidebar - Profile Information -->
+            <aside class="profile-sidebar">
+                <div class="profile-card">
+                    <!-- Profile Picture Section -->
+                    <div class="profile-avatar-wrapper">
+                        <img class="profile-avatar" id="profileAvatar" alt="Profile picture">
+                        <button class="edit-avatar-btn" id="editAvatarBtn" aria-label="Edit profile picture">
+                            📷
+                        </button>
+                    </div>
+
+                    <!-- Profile Info Section -->
+                    <div class="profile-info">
+                        <h1 class="profile-name" id="profileName">Loading...</h1>
+                        <p class="profile-username" id="profileUsername">@username</p>
+                        
+                        <!-- Bio Section -->
+                        <div class="profile-bio-section">
+                            <p class="profile-bio" id="profileBio">✨ No bio yet. Click edit to add something lovely.</p>
+                            <button class="edit-bio-btn" id="editBioBtn">
+                                ✎ Edit bio
+                            </button>
+                        </div>
+                        
+                        <!-- Stats Section -->
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="postCount">0</span>
+                                <span class="stat-label">posts</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="followerCount">0</span>
+                                <span class="stat-label">followers</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="followingCount">0</span>
+                                <span class="stat-label">following</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="profile-actions">
+                            <button class="btn btn-primary" id="editProfileBtn">Edit Profile</button>
+                        </div>
+                        
+                        <!-- Join Date -->
+                        <div class="join-date" id="joinDate"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Content - User's Posts -->
+            <main class="profile-posts">
+                <div class="posts-header">
+                    <h2>✨ My Creations</h2>
+                    <button class="btn btn-primary" id="createPostBtn">+ New Post</button>
+                </div>
+                
+                <div class="posts-grid" id="postsGrid">
+                    <!-- Posts will be dynamically inserted here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="editUsername">Username</label>
+                    <input type="text" id="editUsername" placeholder="Your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="editBio">Bio</label>
+                    <textarea id="editBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editAvatarUrl">Profile Picture URL</label>
+                    <input type="url" id="editAvatarUrl" placeholder="https://example.com/your-photo.jpg">
+                    <small>Leave empty to keep current avatar</small>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelEditBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal" id="createPostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Post</h3>
+                <button class="modal-close" id="closePostModalBtn">&times;</button>
+            </div>
+            <form id="createPostForm">
+                <div class="form-group">
+                    <label for="postContent">What's on your mind?</label>
+                    <textarea id="postContent" rows="4" placeholder="Share your thoughts..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelPostBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
