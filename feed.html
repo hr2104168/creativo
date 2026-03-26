@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creativo Feed</title>
+    <link rel="stylesheet" href="css/feed.css">
+</head>
+
+<body data-page="feed">
+
+    <!-- NAVBAR -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="navbar-inner">
+            <a href="feed.html" class="navbar-brand" aria-label="Creativo home">
+                <img src="assets/images/creativo_icon.png" alt="Creativo icon" class="brand-icon">
+                <img src="assets/images/creativo_name.svg" alt="Creativo name" class="brand-name">
+            </a>
+
+            <div class="navbar-search">
+                <img src="assets/images/search_icon.svg" class="navbar-search-icon" aria-hidden="true">
+                <input type="search" id="navSearch" placeholder="Search creators…" aria-label="Search creators">
+                <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
+            </div>
+
+            <div class="navbar-actions">
+                <a href="#" id="navbar-ProfileLink" class="nav-profile-btn" aria-label="My profile">
+                    <span id="navbar-avatar" aria-hidden="true"></span>
+                    <span class="navbar-username" id="navbar-username"></span>
+                </a>
+                <button class="btn-logout" id="logoutBtn" aria-label="Log out">
+                    <img src="assets/images/logout_icon.svg" class="logout-svg" aria-hidden="true">
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FEED LAYOUT -->
+    <div class="feed-layout">
+
+        <!-- ;eft sidebar: category filters -->
+        <aside class="sidebar" aria-label="Category filters">
+            <span class="sidebar-section-title">BROWSE</span>
+
+            <button class="cat-filter-btn active" data-cat="all" aria-pressed="true">
+                All Posts
+            </button>
+
+            <hr class="sidebar-divider">
+            <span class="sidebar-section-title">CATEGORIES</span>
+
+            <button class="cat-filter-btn" data-cat="poetry" aria-pressed="false">
+                <span>✍️</span> Poetry
+            </button>
+            <button class="cat-filter-btn" data-cat="story" aria-pressed="false">
+                <span>📖</span> Story
+            </button>
+            <button class="cat-filter-btn" data-cat="artidea" aria-pressed="false">
+                <span>🎨</span> Art Idea
+            </button>
+            <button class="cat-filter-btn" data-cat="prompt" aria-pressed="false">
+                <span>💡</span> Prompt
+            </button>
+            <button class="cat-filter-btn" data-cat="motivation" aria-pressed="false">
+                <span>✨</span> Motivation
+            </button>
+        </aside>
+
+        <!-- MAIN FEED COLUMN -->
+        <main>
+            <!-- feed / explore tabs -->
+            <div class="feed-tabs" role="tablist" aria-label="Feed view">
+                <button class="feed-tab-btn active" id="tabFeed" role="tab" aria-selected="true">✦ My Feed</button>
+                <button class="feed-tab-btn" id="tabExplore" role="tab" aria-selected="false">Explore All</button>
+            </div>
+
+            <!-- POST CREATION BOX -->
+            <section class="post-create-card" aria-label="Create a new post">
+                <div class="post-create-header">
+                    <div id="createAvatar"></div>
+                    <div class="post-create-textarea-wrapper">
+                        <textarea class="post-create-textarea" id="postContent"
+                            placeholder="What creative expression are you feeling today? (200 characters max)"
+                            maxlength="200" rows="3" aria-label="Write your creative post"></textarea>
+                    </div>
+                </div>
+                <div class="post-create-footer">
+                    <div class="category-selector" role="group" aria-label="Select post category">
+                        <button class="cat-select-btn" data-cat-select="poetry" type="button" title="Poetry">✍️
+                            Poetry</button>
+                        <button class="cat-select-btn" data-cat-select="story" type="button" title="Story">📖
+                            Story</button>
+                        <button class="cat-select-btn" data-cat-select="artidea" type="button" title="Art Idea">🎨 Art
+                            Idea</button>
+                        <button class="cat-select-btn" data-cat-select="prompt" type="button" title="Prompt">💡
+                            Prompt</button>
+                        <button class="cat-select-btn" data-cat-select="motivation" type="button" title="Motivation">✨
+                            Motivation</button>
+                    </div>
+                    <div class="post-create-actions">
+                        <span class="char-counter" id="charCount" aria-live="polite"
+                            aria-label="Characters remaining">200</span>
+                        <button class="post-button" id="submitPost" type="button">
+                            <img src="assets/images/post.svg" alt="Creativo name" class="post-svg" aria-hidden="true">
+                            Post
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FEED POSTS -->
+            <div id="feedContainer" role="feed" aria-label="Posts feed" aria-live="polite"></div>
+
+            <!-- EXPLORE TAB CONTENT (hidden by default) -->
+            <div id="exploreContainer" style="display:none;" aria-label="Explore all posts">
+                <div id="explorePosts" role="feed" aria-label="All posts"></div>
+            </div>
+
+        </main>
+
+        <!-- RIGHT SIDEBAR: Discover Creators -->
+        <aside class="discover-sidebar" id="exploreSidebar" aria-label="Discover creators">
+            <!-- Rendered by JS -->
+            <p class="sidebar-empty">Loading creators…</p>
+        </aside>
+
+    </div>
+
+    <script src="js/feed.js"></script>
+    <script>
+        // Render the current user's avatar in post creation box
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = Storage.getCurrentUser();
+            const el = document.getElementById('createAvatar');
+            if (user && el) el.innerHTML = UI.renderAvatar(user, 'sm');
+        });
+    </script>
+</body>
+
+</html>
