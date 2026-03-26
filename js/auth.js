@@ -78,9 +78,10 @@ if (loginForm) {
 
         /* check credentials against stored users */
         var users = Storage.getUsers();
-        var user  = users.find(function(u) {
-            return u.email === email && u.password === password;
-        });
+        var user = users.find(function(u) {
+    return String(u.email || '').trim().toLowerCase() === email &&
+           String(u.password || '') === password;
+});
 
         if (!user) {
             markInvalid('login-email');
@@ -126,12 +127,16 @@ if (registerForm) {
             });
 
             if (strengthLabel) {
-                strengthLabel.textContent = passwordInput.value
-                    ? strengthLabels[score - 1]
-                    : 'Min. 6 characters';
-            }
-        });
+    if (!passwordInput.value) {
+        strengthLabel.textContent = 'Min. 6 characters';
+    } else if (score === 0) {
+        strengthLabel.textContent = 'Too short';
+    } else {
+        strengthLabel.textContent = strengthLabels[score - 1];
     }
+}
+        });
+    } 
 
     /* handle form submission */
     registerForm.addEventListener('submit', function(e) {
@@ -206,21 +211,22 @@ if (registerForm) {
         };
 
         /* save to localStorage and show success */
-        users.push(newUser);
+                users.push(newUser);
         Storage.setUsers(users);
+        Storage.setCurrentUser(newUser.id);
 
-        showAlert('reg-success', 'Account created! Redirecting to login…');
+        showAlert('reg-success', 'Account created! Redirecting to your feed...');
         registerForm.reset();
 
-        /* reset the strength bar */
         segments.forEach(function(seg) {
             if (seg) seg.style.backgroundColor = '#E8E6DF';
         });
+
         if (strengthLabel) strengthLabel.textContent = 'Min. 6 characters';
 
         setTimeout(function() {
-            window.location.href = 'index.html';
-        }, 1800);
+            window.location.href = 'feed.html';
+        }, 1200);
     });
 
 }
