@@ -4,17 +4,27 @@ const Storage = {
     try { return JSON.parse(localStorage.getItem(key)); }
     catch { return null; }
   },
-  set(key, value) { localStorage.setItem(key, JSON.stringify(value)); },
-  getUsers() { return this.get('creativo_users') || []; },
-  setUsers(u) { this.set('creativo_users', u); },
-  getPosts() { return this.get('creativo_posts') || []; },
-  setPosts(p) { this.set('creativo_posts', p); },
-  getCurrentUser() {
-    const id = localStorage.getItem('creativo_current_user');
-    if (!id) return null;
-    return this.getUsers().find(u => u.id === id) || null;
+  set(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
   },
-  clearCurrentUser() { localStorage.removeItem('creativo_current_user'); }
+  getUsers() {
+    return this.get('users') || [];
+  },
+  setUsers(users) {
+    this.set('users', users);
+  },
+  getPosts() {
+    return this.get('posts') || [];
+  },
+  setPosts(posts) {
+    this.set('posts', posts);
+  },
+  getCurrentUser() {
+    return this.get('loggedInUser') || null;
+  },
+  clearCurrentUser() {
+    localStorage.removeItem('loggedInUser');
+  }
 };
 
 // UTILITIES
@@ -46,15 +56,17 @@ function getAvatarColor(id) {
 
 // AUTH
 const Auth = {
+  requireAuth() {
+    const user = Storage.getCurrentUser();
+    if (!user) {
+      window.location.href = 'index.html';
+    }
+    return user;
+  },
+
   logout() {
     Storage.clearCurrentUser();
     window.location.href = 'index.html';
-  },
-
-  requireAuth() {
-    const user = Storage.getCurrentUser();
-    if (!user) { window.location.href = 'index.html'; return null; }
-    return user;
   }
 };
 
