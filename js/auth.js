@@ -136,7 +136,7 @@ if (registerForm) {
     }
 }
         });
-    } 
+    } }
 
     /* handle form submission */
     registerForm.addEventListener('submit', function(e) {
@@ -211,11 +211,10 @@ if (registerForm) {
         };
 
         /* save to localStorage and show success */
-                users.push(newUser);
+                       users.push(newUser);
         Storage.setUsers(users);
-        Storage.setCurrentUser(newUser.id);
 
-        showAlert('reg-success', 'Account created! Redirecting to LogIN...');
+        showAlert('reg-success', 'Account created! Redirecting to login...');
         registerForm.reset();
 
         segments.forEach(function(seg) {
@@ -229,4 +228,3 @@ if (registerForm) {
         }, 1200);
     });
 
-}
