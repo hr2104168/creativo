@@ -19,12 +19,7 @@
             </a>
 
             <div class="navbar-search">
-                <svg class="navbar-search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
+                <img src="assets/images/search_icon.svg" class="navbar-search-icon" aria-hidden="true">
                 <input type="search" id="navSearch" placeholder="Search creators…" aria-label="Search creators">
                 <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
             </div>
@@ -35,13 +30,7 @@
                     <span class="navbar-username" id="navbar-username"></span>
                 </a>
                 <button class="btn-logout" id="logoutBtn" aria-label="Log out">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        aria-hidden="true">
-                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-                        <polyline points="16 17 21 12 16 7" />
-                        <line x1="21" y1="12" x2="9" y2="12" />
-                    </svg>
+                    <img src="assets/images/logout_icon.svg" class="logout-svg" aria-hidden="true">
                 </button>
             </div>
         </div>
@@ -50,16 +39,16 @@
     <!-- FEED LAYOUT -->
     <div class="feed-layout">
 
-        <!-- LEFT SIDEBAR: Category Filters -->
+        <!-- ;eft sidebar: category filters -->
         <aside class="sidebar" aria-label="Category filters">
-            <span class="sidebar-section-title">Browse</span>
+            <span class="sidebar-section-title">BROWSE</span>
 
             <button class="cat-filter-btn active" data-cat="all" aria-pressed="true">
                 All Posts
             </button>
 
             <hr class="sidebar-divider">
-            <span class="sidebar-section-title">Categories</span>
+            <span class="sidebar-section-title">CATEGORIES</span>
 
             <button class="cat-filter-btn" data-cat="poetry" aria-pressed="false">
                 <span>✍️</span> Poetry
@@ -80,10 +69,10 @@
 
         <!-- MAIN FEED COLUMN -->
         <main>
-            <!-- Feed / Explore Tabs -->
+            <!-- feed / explore tabs -->
             <div class="feed-tabs" role="tablist" aria-label="Feed view">
                 <button class="feed-tab-btn active" id="tabFeed" role="tab" aria-selected="true">✦ My Feed</button>
-                <button class="feed-tab-btn" id="tabExplore" role="tab" aria-selected="false">🔍 Explore All</button>
+                <button class="feed-tab-btn" id="tabExplore" role="tab" aria-selected="false">Explore All</button>
             </div>
 
             <!-- POST CREATION BOX -->
@@ -112,13 +101,8 @@
                     <div class="post-create-actions">
                         <span class="char-counter" id="charCount" aria-live="polite"
                             aria-label="Characters remaining">200</span>
-                        <button class="btn-primary" id="submitPost" type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                stroke-linejoin="round" aria-hidden="true">
-                                <line x1="22" y1="2" x2="11" y2="13" />
-                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                            </svg>
+                        <button class="post-button" id="submitPost" type="button">
+                            <img src="assets/images/post.svg" alt="Creativo name" class="post-svg" aria-hidden="true">
                             Post
                         </button>
                     </div>
