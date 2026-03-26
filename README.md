@@ -19,13 +19,13 @@ micro-poems, brief stories, inspirational thoughts, and creative prompts.
 - localStorage for data persistence
 
 ## Project Structure
-- `index.html` — Landing/Login page
-- `register.html` — Registration page
-- `feed.html` — News Feed
-- `profile.html` — User Profile
-- `css/` — Stylesheets
-- `js/` — JavaScript logic
-- `assets/` — Images and icons
+- `index.html`:  Landing/Login page
+- `register.html`:  Registration page
+- `feed.html`:  News Feed
+- `profile.html`:  User Profile
+- `css/`:  Stylesheets
+- `js/`: JavaScript logic
+- `assets/`:  Images and icons
 
 ## Course
-CMPS 350 — Web DevelopmentCMPS350 Spring2026 Course Project 
+CMPS 350: Web DevelopmentCMPS350 Spring2026 Course Project 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creativo Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+    <div class="page">
+
+        <!-- LEFT PANEL: decorative -->
+        <div class="left-panel">
+            <div class="left-inner-circle"></div>
+
+            <!-- Brand logo -->
+            <div class="brand">
+                <a href="index.html" class="brand-logo">
+                    <img src="assets/images/creativo_icon.png" alt="Icon" class="brand-icon-img">
+                    <img src="assets/images/creativo_logo.svg" alt="Logo"   class="brand-wordmark">
+                </a>
+            </div>
+
+            <!-- Featured quote -->
+            <div class="left-quote">
+                <span class="quote-mark">"</span>
+                <p class="quote-text">Poetry is when an emotion has found its thought and the thought has found words.</p>
+                <p class="quote-author">— Robert Frost</p>
+            </div>
+
+            <!-- Category tags -->
+            <div class="left-tags">
+                <span class="left-tag">poetry</span>
+                <span class="left-tag">storytelling</span>
+                <span class="left-tag">inspiration</span>
+                <span class="left-tag">prompts</span>
+                <span class="left-tag">reflection</span>
+            </div>
+        </div>
+
+        <!--  RIGHT PANEL: login form -->
+        <div class="right-panel">
+            <div class="form-wrap">
+
+                <h2 class="form-heading">Welcome back</h2>
+                <p class="form-sub">
+                    Don't have an account? <a href="register.html">Create one</a>
+                </p>
+
+                <!-- Error message -->
+                <div class="alert alert-error" id="login-error"></div>
+
+                <form id="login-form" novalidate>
+
+                    <div class="field">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="Name1234@email.com" autocomplete="email">
+                    </div>
+
+                    <div class="field">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Sign in to Creativo</button>
+
+                </form>
+
+                <div class="divider-row">or</div>
+
+                <p class="form-footer">
+                    By signing in you agree to our Terms of Service and Privacy Policy.
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
