@@ -215,7 +215,7 @@ if (registerForm) {
         Storage.setUsers(users);
         Storage.setCurrentUser(newUser.id);
 
-        showAlert('reg-success', 'Account created! Redirecting to your feed...');
+        showAlert('reg-success', 'Account created! Redirecting to LogIN...');
         registerForm.reset();
 
         segments.forEach(function(seg) {
@@ -225,7 +225,7 @@ if (registerForm) {
         if (strengthLabel) strengthLabel.textContent = 'Min. 6 characters';
 
         setTimeout(function() {
-            window.location.href = 'feed.html';
+            window.location.href = 'index.html';
         }, 1200);
     });
 
