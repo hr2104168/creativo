@@ -151,8 +151,7 @@ body {
 }
 
 .brand-icon-img {
-    width: 56px;
-    height: 56px;
+    width: 150px;
     object-fit: contain;
     display: block;
     flex-shrink: 0;
