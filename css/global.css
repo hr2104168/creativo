@@ -1,10 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 :root {
-  --color-primary: #7F77DD;
-  --color-primary-light: #EEEDFE;
-  --color-primary-dark: #3C3489;
-  --color-blush: #F4C0D1;
-  --color-cream: #FAF8F5;
-  --color-ink: #2C2C2A;
-  --font-body: 'Georgia', serif;
-  --font-ui: system-ui, sans-serif;
+    /*  Brand / primary palette  */
+    --color-primary:        #7F77DD;
+    --color-primary-soft:   #AFA9EC;
+    --color-primary-light:  #EEEDFE;
+    --color-primary-dark:   #3C3489;
+    --color-primary-glow:   rgba(127, 119, 221, 0.18);
+
+    /*  UI neutrals  */
+    --color-cream:          #FAF8F5;
+    --color-ink:            #2C2C2A;
+    --color-muted:          #888780;
+
+    /*  Surfaces  */
+    --color-bg:             #F5F0FF;
+    --color-surface:        #FFFFFF;
+    --color-surface-alt:    #FAF7FF;
+    --color-surface-hover:  #F0EAFA;
+
+    /*  Text  */
+    --color-text:           #231647;
+    --color-text-secondary: #6B5BA0;
+    --color-text-muted:     #A99BC7;
+
+    /*  Borders  */
+    --color-border:         rgba(127, 119, 221, 0.18);
+    --color-border-strong:  #C8B8E8;
+
+    /*  Feedback  */
+    --color-success:        #68C887;
+    --color-error:          #E07070;
+    --color-warning:        #F0C060;
+    --color-error-bg:       #FBEAF0;
+    --color-error-border:   #F4C0D1;
+    --color-error-text:     #993556;
+    --color-success-bg:     #E1F5EE;
+    --color-success-border: #9FE1CB;
+    --color-success-text:   #0F6E56;
+
+    /*  Reactions  */
+    --color-inspire:        #E07090;
+    --color-appreciate:     #D0A020;
+
+    /*  Category colours  */
+    --color-cat-poetry:          #E8D5F5;
+    --color-cat-poetry-text:     #6B3FA0;
+    --color-cat-story:           #D5E5F5;
+    --color-cat-story-text:      #2D70A0;
+    --color-cat-artidea:         #F5E5D0;
+    --color-cat-artidea-text:    #A05820;
+    --color-cat-prompt:          #D5F0E0;
+    --color-cat-prompt-text:     #28805A;
+    --color-cat-motivation:      #F5D8E8;
+    --color-cat-motivation-text: #A03070;
+
+    /* Typography */
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-ui:      'DM Sans', sans-serif;
+    --font-body:    'DM Sans', system-ui, sans-serif;
+
+    /* Layout */
+    --nav-height: 64px;
+
+    /* Border radii */
+    --border-radius-sm:   8px;
+    --border-radius-md:   14px;
+    --border-radius-lg:   20px;
+    --border-radius-xl:   28px;
+    --border-radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 4px  rgba(100, 60, 180, 0.08);
+    --shadow-md: 0 4px 16px rgba(100, 60, 180, 0.12);
+    --shadow-lg: 0 8px 32px rgba(100, 60, 180, 0.16);
+    --shadow-xl: 0 16px 48px rgba(100, 60, 180, 0.20);
+
+    /* Transitions */
+    --transition:      0.2s ease;
+    --duration-base:   250ms;
+    --duration-slow:   400ms;
+
+    /* Spacing */
+    --spacing-xs: 6px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 48px;
 }

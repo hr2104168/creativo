@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creativo Feed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/feed.css">
+    <link rel="stylesheet" href="css/posts.css">
 </head>
 
 <body data-page="feed">
@@ -39,7 +40,7 @@
     <!-- FEED LAYOUT -->
     <div class="feed-layout">
 
-        <!-- ;eft sidebar: category filters -->
+        <!-- Left sidebar: category filters -->
         <aside class="sidebar" aria-label="Category filters">
             <span class="sidebar-section-title">BROWSE</span>
 
@@ -69,10 +70,10 @@
 
         <!-- MAIN FEED COLUMN -->
         <main>
-            <!-- feed / explore tabs -->
+            <!-- Feed / Explore tabs -->
             <div class="feed-tabs" role="tablist" aria-label="Feed view">
-                <button class="feed-tab-btn active" id="tabFeed" role="tab" aria-selected="true">✦ My Feed</button>
-                <button class="feed-tab-btn" id="tabExplore" role="tab" aria-selected="false">Explore All</button>
+                <button class="feed-tab-btn active" id="tabFeed"    role="tab" aria-selected="true"> ✦ My Feed</button>
+                <button class="feed-tab-btn"         id="tabExplore" role="tab" aria-selected="false">Explore All</button>
             </div>
 
             <!-- POST CREATION BOX -->
@@ -87,55 +88,41 @@
                 </div>
                 <div class="post-create-footer">
                     <div class="category-selector" role="group" aria-label="Select post category">
-                        <button class="cat-select-btn" data-cat-select="poetry" type="button" title="Poetry">✍️
-                            Poetry</button>
-                        <button class="cat-select-btn" data-cat-select="story" type="button" title="Story">📖
-                            Story</button>
-                        <button class="cat-select-btn" data-cat-select="artidea" type="button" title="Art Idea">🎨 Art
-                            Idea</button>
-                        <button class="cat-select-btn" data-cat-select="prompt" type="button" title="Prompt">💡
-                            Prompt</button>
-                        <button class="cat-select-btn" data-cat-select="motivation" type="button" title="Motivation">✨
-                            Motivation</button>
+                        <button class="cat-select-btn" data-cat-select="poetry"     type="button">✍️ Poetry</button>
+                        <button class="cat-select-btn" data-cat-select="story"      type="button">📖 Story</button>
+                        <button class="cat-select-btn" data-cat-select="artidea"    type="button">🎨 Art Idea</button>
+                        <button class="cat-select-btn" data-cat-select="prompt"     type="button">💡 Prompt</button>
+                        <button class="cat-select-btn" data-cat-select="motivation" type="button">✨ Motivation</button>
                     </div>
                     <div class="post-create-actions">
-                        <span class="char-counter" id="charCount" aria-live="polite"
-                            aria-label="Characters remaining">200</span>
+                        <span class="char-counter" id="charCount" aria-live="polite" aria-label="Characters remaining">200</span>
                         <button class="post-button" id="submitPost" type="button">
-                            <img src="assets/images/post.svg" alt="Creativo name" class="post-svg" aria-hidden="true">
+                            <img src="assets/images/post.svg" alt="" class="post-svg" aria-hidden="true">
                             Post
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- FEED POSTS -->
+            <!-- MY FEED TAB CONTENT -->
             <div id="feedContainer" role="feed" aria-label="Posts feed" aria-live="polite"></div>
 
             <!-- EXPLORE TAB CONTENT (hidden by default) -->
             <div id="exploreContainer" style="display:none;" aria-label="Explore all posts">
                 <div id="explorePosts" role="feed" aria-label="All posts"></div>
             </div>
-
         </main>
 
         <!-- RIGHT SIDEBAR: Discover Creators -->
         <aside class="discover-sidebar" id="exploreSidebar" aria-label="Discover creators">
-            <!-- Rendered by JS -->
             <p class="sidebar-empty">Loading creators…</p>
         </aside>
 
     </div>
 
+    <!-- storage.js must load first — it defines Storage, Auth, Users, Posts, UI -->
+    <script src="js/storage.js"></script>
     <script src="js/feed.js"></script>
-    <script>
-        // Render the current user's avatar in post creation box
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = Storage.getCurrentUser();
-            const el = document.getElementById('createAvatar');
-            if (user && el) el.innerHTML = UI.renderAvatar(user, 'sm');
-        });
-    </script>
-</body>
 
+</body>
 </html>

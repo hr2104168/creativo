@@ -8,11 +8,12 @@
     --color-ink: #2C2C2A;
     --color-muted: #888780;
 
-    /* Primary palette */
-    --color-primary: #8B6BBE;
-    --color-primary-light: #B39DDB;
-    --color-primary-dark: #5E4490;
-    --color-primary-glow: rgba(139, 107, 190, 0.18);
+    /* Primary palette — keep in sync with global.css */
+    --color-primary:       #7F77DD;
+    --color-primary-soft:  #AFA9EC;
+    --color-primary-light: #EEEDFE;
+    --color-primary-dark:  #3C3489;
+    --color-primary-glow:  rgba(127, 119, 221, 0.18);
 
     /* Backgrounds & surfaces */
     --color-bg: #F5F0FF;
@@ -91,7 +92,7 @@ body {
     font-family: var(--font-ui);
     font-size: 15px;
     line-height: 1.6;
-    color: var(--color-primary-light);
+    color: var(--color-text);
     background: var(--color-bg);
     min-height: 100vh;
 }
@@ -180,10 +181,15 @@ h3 {
 
 /* navigation bar */
 .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-height);
     display: flex;
     align-items: center;
-    position: sticky;
-    background: var(--color-cream);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -648,19 +654,6 @@ h3 {
     color: var(--color-error);
 }
 
-/* NAVBAR (second block) */
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    height: var(--nav-height);
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--color-border);
-    display: flex;
-    align-items: center;
-}
 
 .search-result-item {
     display: flex;

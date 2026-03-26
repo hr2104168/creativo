@@ -3,48 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CREATIVO · User Profile</title>
+    <title>Creativo — Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/posts.css">
 </head>
-<body>
-    <div class="app-container">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="logo">CREATIVO</div>
-            <div class="nav-links">
-                <a href="#" class="nav-link">🏠 Feed</a>
-                <a href="#" class="nav-link active">👤 Profile</a>
-                <button class="btn btn-outline" id="logoutBtn">Log out</button>
-            </div>
-        </nav>
+<body data-page="profile">
 
-        <!-- Main Profile Layout -->
+    <!-- NAVBAR — same structure as feed.html -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="navbar-inner">
+
+            <a href="feed.html" class="navbar-brand" aria-label="Creativo home">
+                <img src="assets/images/creativo_icon.png" alt="Creativo icon" class="brand-icon">
+                <img src="assets/images/creativo_name.svg" alt="Creativo" class="brand-name">
+            </a>
+
+            <div class="navbar-actions">
+                <a href="#" id="navbar-ProfileLink" class="nav-profile-btn" aria-label="My profile">
+                    <span id="navbar-avatar" aria-hidden="true"></span>
+                    <span class="navbar-username" id="navbar-username"></span>
+                </a>
+                <button class="btn-logout" id="logoutBtn" aria-label="Log out">
+                    <img src="assets/images/logout_icon.svg" class="logout-svg" aria-hidden="true">
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- PAGE CONTAINER -->
+    <div class="app-container">
+
+        <!-- PROFILE LAYOUT: sidebar | posts -->
         <div class="profile-layout">
-            <!-- Left Sidebar - Profile Information -->
+
+            <!-- LEFT SIDEBAR — profile card -->
             <aside class="profile-sidebar">
                 <div class="profile-card">
-                    <!-- Profile Picture Section -->
+
+                    <!-- Avatar -->
                     <div class="profile-avatar-wrapper">
-                        <img class="profile-avatar" id="profileAvatar" alt="Profile picture">
+                        <div id="profileAvatar"></div>
                         <button class="edit-avatar-btn" id="editAvatarBtn" aria-label="Edit profile picture">
                             📷
                         </button>
                     </div>
 
-                    <!-- Profile Info Section -->
+                    <!-- Name, handle, bio -->
                     <div class="profile-info">
-                        <h1 class="profile-name" id="profileName">Loading...</h1>
-                        <p class="profile-username" id="profileUsername">@username</p>
-                        
-                        <!-- Bio Section -->
+                        <h1 class="profile-name" id="profileName">Loading…</h1>
+                        <p class="profile-handle" id="profileHandle">@username</p>
+
                         <div class="profile-bio-section">
-                            <p class="profile-bio" id="profileBio">✨ No bio yet. Click edit to add something lovely.</p>
-                            <button class="edit-bio-btn" id="editBioBtn">
-                                ✎ Edit bio
-                            </button>
+                            <p class="profile-bio" id="profileBio">No bio yet.</p>
+                            <button class="edit-bio-btn" id="editBioBtn">✎ Edit bio</button>
                         </div>
-                        
-                        <!-- Stats Section -->
+
+                        <!-- Stats -->
                         <div class="profile-stats">
                             <div class="stat-item">
                                 <span class="stat-number" id="postCount">0</span>
@@ -59,52 +75,60 @@
                                 <span class="stat-label">following</span>
                             </div>
                         </div>
-                        
-                        <!-- Action Buttons -->
+
+                        <!-- Actions -->
                         <div class="profile-actions">
-                            <button class="btn btn-primary" id="editProfileBtn">Edit Profile</button>
+                            <!-- Own profile: edit button -->
+                            <button class="btn btn-primary" id="editProfileBtn" style="display:none;">
+                                Edit Profile
+                            </button>
+                            <!-- Other profile: follow button -->
+                            <button class="btn btn-follow" id="followBtn" style="display:none;">
+                                Follow
+                            </button>
                         </div>
-                        
-                        <!-- Join Date -->
-                        <div class="join-date" id="joinDate"></div>
+
+                        <p class="join-date" id="joinDate"></p>
                     </div>
+
                 </div>
             </aside>
 
-            <!-- Right Content - User's Posts -->
+            <!-- MAIN CONTENT — user posts -->
             <main class="profile-posts">
                 <div class="posts-header">
-                    <h2>✨ My Creations</h2>
-                    <button class="btn btn-primary" id="createPostBtn">+ New Post</button>
+                    <h2 id="postsHeading">✨ My Creations</h2>
                 </div>
-                
-                <div class="posts-grid" id="postsGrid">
-                    <!-- Posts will be dynamically inserted here -->
+
+                <div class="posts-list" id="postsList">
+                    <!-- Rendered by profile.js -->
                 </div>
             </main>
+
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
-    <div class="modal" id="editProfileModal">
+
+    <!-- EDIT PROFILE MODAL -->
+    <div class="modal" id="editProfileModal" role="dialog" aria-modal="true" aria-labelledby="editProfileTitle">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Edit Profile</h3>
-                <button class="modal-close" id="closeModalBtn">&times;</button>
+                <h3 id="editProfileTitle">Edit Profile</h3>
+                <button class="modal-close" id="closeModalBtn" aria-label="Close">&times;</button>
             </div>
-            <form id="editProfileForm">
+            <form id="editProfileForm" novalidate>
                 <div class="form-group">
                     <label for="editUsername">Username</label>
-                    <input type="text" id="editUsername" placeholder="Your username" required>
+                    <input type="text" id="editUsername" placeholder="e.g. creativo_mind" autocomplete="username" required>
                 </div>
                 <div class="form-group">
                     <label for="editBio">Bio</label>
-                    <textarea id="editBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                    <textarea id="editBio" rows="3" placeholder="Tell us about yourself…"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="editAvatarUrl">Profile Picture URL</label>
-                    <input type="url" id="editAvatarUrl" placeholder="https://example.com/your-photo.jpg">
-                    <small>Leave empty to keep current avatar</small>
+                    <input type="url" id="editAvatarUrl" placeholder="https://example.com/photo.jpg">
+                    <small>Leave empty to keep your current avatar.</small>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-outline" id="cancelEditBtn">Cancel</button>
@@ -114,26 +138,9 @@
         </div>
     </div>
 
-    <!-- Create Post Modal -->
-    <div class="modal" id="createPostModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create New Post</h3>
-                <button class="modal-close" id="closePostModalBtn">&times;</button>
-            </div>
-            <form id="createPostForm">
-                <div class="form-group">
-                    <label for="postContent">What's on your mind?</label>
-                    <textarea id="postContent" rows="4" placeholder="Share your thoughts..."></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline" id="cancelPostBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Post</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- storage.js must load first — it defines Storage, Auth, Users, Posts, UI -->
+    <script src="js/storage.js"></script>
+    <script src="js/profile.js"></script>
 
-    <script src="profile.js"></script>
 </body>
 </html>

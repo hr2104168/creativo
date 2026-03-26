@@ -1,11 +1,4 @@
-/* =============================================
-   posts.css — Creativo
-   Comment section & avatar fallback styles
-   Works alongside profile.css
-   ============================================= */
-
-
-/* ── Avatar fallback (when no profile pic) ── */
+/*  Avatar fallback (when no profile pic)  */
 
 .avatar-fallback {
   border-radius: 50%;
@@ -20,7 +13,7 @@
 }
 
 
-/* ── Comments section ─────────────────────── */
+/*  Comments section  */
 
 .comments-section {
   margin-top: 0.75rem;
@@ -43,7 +36,7 @@
 }
 
 
-/* ── Single comment ───────────────────────── */
+/*  Single comment  */
 
 .comment {
   display: flex;
@@ -106,7 +99,7 @@
 }
 
 
-/* ── Comment input form ───────────────────── */
+/*  Comment input form ─ */
 
 .comment-form {
   display: flex;
