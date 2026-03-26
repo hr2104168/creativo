@@ -18,12 +18,12 @@ const Storage = {
     },
 
     /* users array */
-    getUsers()   { return this.get('creativo_users') || []; },
-    setUsers(u)  { this.set('creativo_users', u); },
+    getUsers() { return this.get('creativo_users') || []; },
+    setUsers(u) { this.set('creativo_users', u); },
 
     /* posts array */
-    getPosts()   { return this.get('creativo_posts') || []; },
-    setPosts(p)  { this.set('creativo_posts', p); },
+    getPosts() { return this.get('creativo_posts') || []; },
+    setPosts(p) { this.set('creativo_posts', p); },
 
     /* current session — stores the logged-in user's id */
     getCurrentUser() {
@@ -63,8 +63,8 @@ const Auth = {
 /*  USERS  */
 
 const Users = {
-    getAll()     { return Storage.getUsers(); },
-    getById(id)  { return Storage.getUsers().find(u => u.id === id) || null; },
+    getAll() { return Storage.getUsers(); },
+    getById(id) { return Storage.getUsers().find(u => u.id === id) || null; },
 
     /* add targetId to currentId's following list */
     follow(currentId, targetId) {
@@ -98,8 +98,8 @@ const Users = {
 /*  POSTS  */
 
 const Posts = {
-    getAll()       { return Storage.getPosts(); },
-    getById(id)    { return Storage.getPosts().find(p => p.id === id) || null; },
+    getAll() { return Storage.getPosts(); },
+    getById(id) { return Storage.getPosts().find(p => p.id === id) || null; },
     getByUser(uid) { return Storage.getPosts().filter(p => p.authorId === uid); },
 
     /* posts from users that userId follows, plus their own */
@@ -114,12 +114,12 @@ const Posts = {
     create(authorId, content, category) {
         const posts = Storage.getPosts();
         const post = {
-            id:        generateId(),
+            id: generateId(),
             authorId,
-            content:   content.trim(),
+            content: content.trim(),
             category,
             reactions: { inspire: [], appreciate: [] },
-            comments:  [],
+            comments: [],
             createdAt: Date.now()
         };
         posts.unshift(post);
@@ -130,7 +130,7 @@ const Posts = {
     /* delete a post — only the owner can do this */
     delete(postId, userId) {
         const posts = Storage.getPosts();
-        const post  = posts.find(p => p.id === postId);
+        const post = posts.find(p => p.id === postId);
         if (!post || post.authorId !== userId) return false;
         Storage.setPosts(posts.filter(p => p.id !== postId));
         return true;
@@ -139,7 +139,7 @@ const Posts = {
     /* toggle a reaction (inspire / appreciate) on a post */
     toggleReaction(postId, userId, type) {
         const posts = Storage.getPosts();
-        const post  = posts.find(p => p.id === postId);
+        const post = posts.find(p => p.id === postId);
         if (!post) return null;
         const current = this.getUserReaction(post, userId);
         /* remove any existing reaction first */
@@ -162,12 +162,12 @@ const Posts = {
     /* add a comment to a post */
     addComment(postId, authorId, text) {
         const posts = Storage.getPosts();
-        const post  = posts.find(p => p.id === postId);
+        const post = posts.find(p => p.id === postId);
         if (!post || !text.trim()) return null;
         const comment = {
-            id:        generateId(),
+            id: generateId(),
             authorId,
-            text:      text.trim(),
+            text: text.trim(),
             createdAt: Date.now()
         };
         post.comments.push(comment);
@@ -177,8 +177,8 @@ const Posts = {
 
     /* remove a comment — only the comment author can do this */
     deleteComment(postId, commentId, userId) {
-        const posts   = Storage.getPosts();
-        const post    = posts.find(p => p.id === postId);
+        const posts = Storage.getPosts();
+        const post = posts.find(p => p.id === postId);
         if (!post) return false;
         const comment = post.comments.find(c => c.id === commentId);
         if (!comment || comment.authorId !== userId) return false;
@@ -192,15 +192,15 @@ const Posts = {
 /*  CONSTANTS  */
 
 const CATEGORIES = {
-    poetry:     { label: '✍️ Poetry',    emoji: '✍️', name: 'Poetry'     },
-    story:      { label: '📖 Story',      emoji: '📖', name: 'Story'      },
-    artidea:    { label: '🎨 Art Idea',   emoji: '🎨', name: 'Art Idea'   },
-    prompt:     { label: '💡 Prompt',     emoji: '💡', name: 'Prompt'     },
+    poetry: { label: '✍️ Poetry', emoji: '✍️', name: 'Poetry' },
+    story: { label: '📖 Story', emoji: '📖', name: 'Story' },
+    artidea: { label: '🎨 Art Idea', emoji: '🎨', name: 'Art Idea' },
+    prompt: { label: '💡 Prompt', emoji: '💡', name: 'Prompt' },
     motivation: { label: '✨ Motivation', emoji: '✨', name: 'Motivation' }
 };
 
 const REACTIONS = {
-    inspire:    { emoji: '❤️',  label: 'Inspire'    },
+    inspire: { emoji: '❤️', label: 'Inspire' },
     appreciate: { emoji: '⭐', label: 'Appreciate' }
 };
 
@@ -209,12 +209,12 @@ const REACTIONS = {
 
 /* format a timestamp into a human-readable relative string */
 function formatDate(ts) {
-    const d    = new Date(ts);
-    const now  = new Date();
+    const d = new Date(ts);
+    const now = new Date();
     const diff = now - d;
-    if (diff < 60000)     return 'just now';
-    if (diff < 3600000)   return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000)  return `${Math.floor(diff / 3600000)}h ago`;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
     if (diff < 604800000) return `${Math.floor(diff / 86400000)}d ago`;
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
@@ -259,13 +259,13 @@ const UI = {
         const author = Users.getById(post.authorId);
         if (!author) return '';
 
-        const cat          = CATEGORIES[post.category] || CATEGORIES.poetry;
+        const cat = CATEGORIES[post.category] || CATEGORIES.poetry;
         const userReaction = Posts.getUserReaction(post, currentUser.id);
-        const isOwner      = post.authorId === currentUser.id;
+        const isOwner = post.authorId === currentUser.id;
 
         /* build comment rows */
         const commentsHtml = post.comments.map(c => {
-            const cAuthor   = Users.getById(c.authorId);
+            const cAuthor = Users.getById(c.authorId);
             if (!cAuthor) return '';
             const canDelete = c.authorId === currentUser.id;
             return `
@@ -331,7 +331,7 @@ const UI = {
                 </button>
             </div>
 
-            <div class="comments-section" id="comments-${post.id}" style="display:none">
+            <div class="comments-section" style="display:none">
                 <div class="comments-list">
                     ${commentsHtml || '<p class="no-comments">No comments yet.</p>'}
                 </div>
@@ -368,6 +368,8 @@ and it will work for all current and future posts without needing to re-attach l
 
 function attachPostEvents(container, currentUser, onRefresh) {
     if (!container) return;
+    if (container.dataset.eventsBound === 'true') return;
+    container.dataset.eventsBound = 'true';
 
     /* all clicks are handled here via delegation */
     container.addEventListener('click', e => {
@@ -376,7 +378,7 @@ function attachPostEvents(container, currentUser, onRefresh) {
         const reactionBtn = e.target.closest('.reaction-btn');
         if (reactionBtn) {
             e.preventDefault();
-            const postId   = reactionBtn.dataset.postId;
+            const postId = reactionBtn.dataset.postId;
             const reaction = reactionBtn.dataset.reaction;
             Posts.toggleReaction(postId, currentUser.id, reaction);
             if (onRefresh) { onRefresh(); return; }
@@ -385,7 +387,7 @@ function attachPostEvents(container, currentUser, onRefresh) {
             if (!post) return;
             const card = container.querySelector(`[data-post-id="${postId}"]`);
             if (!card) return;
-            const tmp  = document.createElement('div');
+            const tmp = document.createElement('div');
             tmp.innerHTML = UI.renderPostCard(post, currentUser);
             const newEl = tmp.firstElementChild;
             card.replaceWith(newEl);
@@ -397,23 +399,34 @@ function attachPostEvents(container, currentUser, onRefresh) {
         const toggleBtn = e.target.closest('.comment-toggle-btn');
         if (toggleBtn) {
             e.preventDefault();
-            const postId  = toggleBtn.dataset.postId;
-            const section = document.getElementById('comments-' + postId);
+
+            const postCard = toggleBtn.closest('.post-card');
+            if (!postCard) return;
+
+            const section = postCard.querySelector('.comments-section');
             if (!section) return;
-            const isOpen  = section.style.display !== 'none';
+
+            const isOpen = section.style.display !== 'none';
             section.style.display = isOpen ? 'none' : 'block';
-            if (!isOpen) section.querySelector('.comment-input')?.focus();
+
+            if (!isOpen) {
+                section.querySelector('.comment-input')?.focus();
+            }
             return;
         }
 
         /* submit a new comment */
         const submitBtn = e.target.closest('.comment-submit-btn');
         if (submitBtn) {
+            e.preventDefault();
+
             const postId = submitBtn.dataset.postId;
-            const input  = container.querySelector(`.comment-input[data-post-id="${postId}"]`);
+            const postCard = submitBtn.closest('.post-card');
+            if (!postCard) return;
+
+            const input = postCard.querySelector(`.comment-input[data-post-id="${postId}"]`);
             if (input && input.value.trim()) {
                 Posts.addComment(postId, currentUser.id, input.value);
-                input.value = '';
                 if (onRefresh) onRefresh();
             }
             return;
@@ -447,7 +460,7 @@ function attachPostEvents(container, currentUser, onRefresh) {
     container.addEventListener('keydown', e => {
         if (e.key === 'Enter' && e.target.classList.contains('comment-input')) {
             e.preventDefault();
-            const postId    = e.target.dataset.postId;
+            const postId = e.target.dataset.postId;
             const submitBtn = container.querySelector(`.comment-submit-btn[data-post-id="${postId}"]`);
             if (submitBtn) submitBtn.click();
         }
@@ -458,20 +471,20 @@ function attachPostEvents(container, currentUser, onRefresh) {
 /* NAVBAR SETUP */
 
 function setupNavbar(currentUser) {
-    const avatar   = document.getElementById('navbar-avatar');
+    const avatar = document.getElementById('navbar-avatar');
     const username = document.getElementById('navbar-username');
-    const link     = document.getElementById('navbar-ProfileLink');
-    const logout   = document.getElementById('logoutBtn');
+    const link = document.getElementById('navbar-ProfileLink');
+    const logout = document.getElementById('logoutBtn');
 
-    if (avatar)   avatar.innerHTML     = UI.renderAvatar(currentUser, 'xs');
+    if (avatar) avatar.innerHTML = UI.renderAvatar(currentUser, 'xs');
     if (username) username.textContent = '@' + currentUser.username;
-    if (link)     link.href            = `profile.html?id=${currentUser.id}`;
-    if (logout)   logout.addEventListener('click', () => {
+    if (link) link.href = `profile.html?id=${currentUser.id}`;
+    if (logout) logout.addEventListener('click', () => {
         if (confirm('Log out of Creativo?')) Auth.logout();
     });
 
     /* search bar: only present on feed page */
-    const searchInput   = document.getElementById('navSearch');
+    const searchInput = document.getElementById('navSearch');
     const searchResults = document.getElementById('searchResults');
     if (searchInput && searchResults) {
         searchInput.addEventListener('input', () => {
