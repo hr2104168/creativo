@@ -220,9 +220,8 @@ h3 {
 
 /* creativo name */
 .brand-name {
-    height: 100px;
+    height: 20px;
     object-fit: contain;
-    padding-left: 4px;
 }
 
 /* search bar */
@@ -913,6 +912,14 @@ h3 {
 .explore-posts {
     font-size: 11px;
     color: var(--color-text-muted);
+}
+
+.discover-sidebar .sidebar-title {
+    font-size: 20px;          
+    font-weight: 600;
+    letter-spacing: 0.05rem;
+    color: var(--color-ink);
+    padding: 0 10px 8px;
 }
 
 /* EMPTY STATE */
