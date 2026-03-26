@@ -218,6 +218,42 @@ function initFeedPage() {
         if (activeTab === 'feed') renderFeedTab();
     }
 
+    function renderExploreSidebar(currentUser) {
+    const contentEl = document.querySelector('#exploreSidebar .sidebar-content');
+    if (!contentEl) return;
+
+    const allUsers = Users.getAll().filter(u => u.id !== currentUser.id);
+    contentEl.innerHTML = ''; // clear previous content
+
+    if (allUsers.length === 0) {
+        contentEl.innerHTML = '<p class="sidebar-empty">No other users yet.</p>';
+        return;
+    }
+
+    allUsers.forEach(u => {
+        const isFollowing = Users.isFollowing(currentUser.id, u.id);
+        const postCount   = Posts.getByUser(u.id).length;
+        contentEl.innerHTML += `
+            <div class="explore-user-card">
+                <a href="profile.html?id=${u.id}" class="explore-user-info">
+                    ${UI.renderAvatar(u, 'sm')}
+                    <div>
+                        <span class="explore-username">@${u.username}</span>
+                        <span class="explore-posts">${postCount} post${postCount !== 1 ? 's' : ''}</span>
+                    </div>
+                </a>
+                <button class="btn-follow ${isFollowing ? 'following' : ''}"
+                    data-user-id="${u.id}" data-following="${isFollowing}">
+                    ${isFollowing ? 'Following' : 'Follow'}
+                </button>
+            </div>`;
+    });
+
+    /* attach follow/unfollow events */
+    contentEl.querySelectorAll('.btn-follow').forEach(btn => {
+        btn.addEventListener('click', () => handleSidebarFollow(btn, currentUser));
+    });
+}
 
     /* INITIAL RENDER */
     renderFeedTab();
