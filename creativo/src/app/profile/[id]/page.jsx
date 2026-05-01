@@ -677,6 +677,13 @@ export default function ProfilePage() {
                     <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.05rem', fontStyle: 'italic', color: '#231647', lineHeight: '1.75', padding: '8px 0 4px', margin: 0 }}>
                       {post.content}
                     </p>
+                    {post.imageUrl && (
+                      <img
+                        src={post.imageUrl}
+                        alt={`${post.author.username}'s artwork`}
+                        style={{ display: 'block', width: '100%', maxHeight: '420px', objectFit: 'cover', borderRadius: '8px', margin: '12px 0 4px', border: '1px solid rgba(127,119,221,0.18)' }}
+                      />
+                    )}
 
                     {/* Post Footer */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid rgba(127,119,221,0.18)', marginTop: '8px' }}>

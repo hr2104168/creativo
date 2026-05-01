@@ -120,6 +120,9 @@ export default function FeedPage() {
     const [activeFilter, setActiveFilter] = useState('all')
     const [postContent, setPostContent] = useState('')
     const [selectedCat, setSelectedCat] = useState('poetry')
+    const [artFile, setArtFile] = useState(null)
+    const [artPreview, setArtPreview] = useState('')
+    const [posting, setPosting] = useState(false)
     const [openComments, setOpenComments] = useState({})
     const [commentInputs, setCommentInputs] = useState({})
     const [searchQuery, setSearchQuery] = useState('')
@@ -204,19 +207,62 @@ export default function FeedPage() {
         ))
     }
 
+    function handleArtFileChange(e) {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+        if (!allowed.includes(file.type)) {
+            showToast('Only JPEG, PNG, WebP, GIF allowed.', 'error')
+            return
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            showToast('Image must be under 2 MB.', 'error')
+            return
+        }
+
+        setArtFile(file)
+        setArtPreview(URL.createObjectURL(file))
+        setSelectedCat('artidea')
+    }
+
+    function clearArtFile() {
+        setArtFile(null)
+        setArtPreview('')
+    }
+
     async function handleSubmitPost() {
-        if (!postContent.trim()) { showToast('Write something creative first!', 'error'); return }
+        if (!postContent.trim()) { showToast('Write a caption first!', 'error'); return }
         if (postContent.length > 200) { showToast('Keep it under 200 characters!', 'error'); return }
+
+        setPosting(true)
+        let imageUrl = null
+
+        if (artFile) {
+            const form = new FormData()
+            form.append('file', artFile)
+            const uploadRes = await fetch('/api/upload', { method: 'POST', body: form })
+            const uploadData = await uploadRes.json()
+            if (!uploadRes.ok) {
+                showToast(uploadData.error || 'Image upload failed.', 'error')
+                setPosting(false)
+                return
+            }
+            imageUrl = uploadData.url
+        }
+
         const res = await fetch('/api/posts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: postContent, category: selectedCat }),
+            body: JSON.stringify({ content: postContent, category: selectedCat, imageUrl }),
         })
         if (res.ok) {
             setPostContent('')
+            clearArtFile()
             showToast('Your creation is live! ✨')
             loadPosts()
         }
+        setPosting(false)
     }
 
     async function handleDeletePost(postId) {
@@ -480,6 +526,14 @@ export default function FeedPage() {
                                 rows={3}
                             />
                         </div>
+                        {artPreview && (
+                            <div style={create.previewWrap}>
+                                <img src={artPreview} alt="Artwork preview" style={create.previewImage} />
+                                <button onClick={clearArtFile} style={create.removeImageBtn}>
+                                    Remove image
+                                </button>
+                            </div>
+                        )}
                         <div style={create.footer}>
                             <div style={create.catBtns}>
                                 {Object.entries(CATEGORIES).map(([key, cat]) => (
@@ -499,11 +553,20 @@ export default function FeedPage() {
                                 ))}
                             </div>
                             <div style={create.actions}>
+                                <label style={create.uploadBtn}>
+                                    Show your art
+                                    <input
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        style={{ display: 'none' }}
+                                        onChange={handleArtFileChange}
+                                    />
+                                </label>
                                 <span style={{ fontSize: '13px', color: '#A99BC7', fontWeight: '500' }}>
                                     {200 - postContent.length}
                                 </span>
-                                <button style={create.postBtn} onClick={handleSubmitPost}>
-                                    ✦ Post
+                                <button style={posting ? { ...create.postBtn, opacity: 0.7 } : create.postBtn} onClick={handleSubmitPost} disabled={posting}>
+                                    {posting ? 'Posting...' : '✦ Post'}
                                 </button>
                             </div>
                         </div>
@@ -569,6 +632,13 @@ export default function FeedPage() {
 
                                     {/* CONTENT */}
                                     <p style={card.content}>{post.content}</p>
+                                    {post.imageUrl && (
+                                        <img
+                                            src={post.imageUrl}
+                                            alt={`${post.author.username}'s artwork`}
+                                            style={card.image}
+                                        />
+                                    )}
 
                                     {/* FOOTER */}
                                     <div style={card.footer}>
@@ -752,7 +822,11 @@ const create = {
     catBtns: { display: 'flex', gap: '6px', flexWrap: 'wrap' },
     catBtn: { display: 'flex', alignItems: 'center', gap: '4px', padding: '5px 12px', borderRadius: '9999px', fontSize: '12px', fontWeight: '500', border: '1.5px solid #E4DCF5', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: '0.2s' },
     actions: { display: 'flex', alignItems: 'center', gap: '12px' },
+    uploadBtn: { display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FAF7FF', color: '#6B5BA0', borderRadius: '9999px', padding: '9px 16px', fontSize: '13px', fontWeight: '500', border: '1.5px solid #E4DCF5', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
     postBtn: { display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#7F77DD', color: '#fff', borderRadius: '9999px', padding: '10px 24px', fontSize: '14px', fontWeight: '500', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
+    previewWrap: { marginLeft: '52px', marginBottom: '14px', position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(127,119,221,0.18)', background: '#FAF7FF' },
+    previewImage: { display: 'block', width: '100%', maxHeight: '260px', objectFit: 'cover' },
+    removeImageBtn: { position: 'absolute', right: '10px', top: '10px', border: 'none', borderRadius: '9999px', background: 'rgba(35,22,71,0.76)', color: '#fff', padding: '7px 12px', fontSize: '12px', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
 }
 
 const card = {
@@ -764,6 +838,7 @@ const card = {
     badge: { display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: '600', letterSpacing: '0.03em', whiteSpace: 'nowrap' },
     deleteBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', color: '#A99BC7', padding: '4px', borderRadius: '50%' },
     content: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.05rem', fontStyle: 'italic', color: '#231647', lineHeight: '1.75', letterSpacing: '0.01em', padding: '8px 0 4px', margin: 0 },
+    image: { display: 'block', width: '100%', maxHeight: '420px', objectFit: 'cover', borderRadius: '8px', margin: '12px 0 4px', border: '1px solid rgba(127,119,221,0.18)' },
     footer: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', paddingTop: '12px', borderTop: '1px solid rgba(127,119,221,0.18)', marginTop: '8px' },
     reactionBtn: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: '0.2s', fontFamily: "'DM Sans', sans-serif" },
     bookmarkBtn: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: '0.2s', fontFamily: "'DM Sans', sans-serif" },

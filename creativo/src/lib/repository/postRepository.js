@@ -1,7 +1,7 @@
 import prisma from '../prisma';
 
 const POST_SELECT = {
-  id: true, content: true, category: true, createdAt: true,
+  id: true, content: true, category: true, imageUrl: true, createdAt: true,
   author: { select: { id: true, username: true, profilePicture: true } },
   reactions: { select: { id: true, type: true, userId: true } },
   bookmarks: { select: { id: true, userId: true } },
@@ -73,9 +73,9 @@ export async function getPostsByUser(userId) {
   });
 }
 
-export async function createPost({ authorId, content, category }) {
+export async function createPost({ authorId, content, category, imageUrl }) {
   return prisma.post.create({
-    data: { authorId, content: content.trim(), category },
+    data: { authorId, content: content.trim(), category, imageUrl },
     select: POST_SELECT,
   });
 }

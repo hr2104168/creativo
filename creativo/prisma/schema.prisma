@@ -43,6 +43,7 @@ model Post {
   id        String   @id @default(cuid())
   content   String
   category  String
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   authorId  String

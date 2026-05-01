@@ -35,13 +35,13 @@ export async function POST(request) {
     if (!currentUser)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { content, category } = await request.json();
+    const { content, category, imageUrl } = await request.json();
     if (!content?.trim())
       return NextResponse.json({ error: 'Content is required.' }, { status: 400 });
     if (content.length > 200)
       return NextResponse.json({ error: 'Max 200 characters.' }, { status: 400 });
 
-    const post = await createPost({ authorId: currentUser.id, content, category });
+    const post = await createPost({ authorId: currentUser.id, content, category, imageUrl });
     return NextResponse.json({ post }, { status: 201 });
   } catch (err) {
     console.error(err);
