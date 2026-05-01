@@ -4,7 +4,15 @@ const POST_SELECT = {
   id: true, content: true, category: true, createdAt: true,
   author: { select: { id: true, username: true, profilePicture: true } },
   reactions: { select: { id: true, type: true, userId: true } },
-  _count: { select: { comments: true } },
+  bookmarks: { select: { id: true, userId: true } },
+  comments: {
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true, text: true, createdAt: true,
+      author: { select: { id: true, username: true, profilePicture: true } },
+    },
+  },
+  _count: { select: { comments: true, bookmarks: true } },
 };
 
 export async function getPostById(id) {
@@ -12,13 +20,6 @@ export async function getPostById(id) {
     where: { id },
     select: {
       ...POST_SELECT,
-      comments: {
-        orderBy: { createdAt: 'asc' },
-        select: {
-          id: true, text: true, createdAt: true,
-          author: { select: { id: true, username: true, profilePicture: true } },
-        },
-      },
     },
   });
 }
@@ -44,6 +45,19 @@ export async function getFeedPosts({ userId, category, page = 1 }) {
 export async function getExplorePosts({ category, page = 1 }) {
   return prisma.post.findMany({
     where: category && category !== 'all' ? { category } : {},
+    select: POST_SELECT,
+    orderBy: { createdAt: 'desc' },
+    skip: (page - 1) * 20,
+    take: 20,
+  });
+}
+
+export async function getSavedPosts({ userId, category, page = 1 }) {
+  return prisma.post.findMany({
+    where: {
+      bookmarks: { some: { userId } },
+      ...(category && category !== 'all' ? { category } : {}),
+    },
     select: POST_SELECT,
     orderBy: { createdAt: 'desc' },
     skip: (page - 1) * 20,
@@ -81,6 +95,20 @@ export async function toggleReaction(postId, userId, type) {
   if (existing.type === type)
     return prisma.reaction.delete({ where: { id: existing.id } });
   return prisma.reaction.update({ where: { id: existing.id }, data: { type } });
+}
+
+export async function toggleBookmark(postId, userId) {
+  const existing = await prisma.bookmark.findUnique({
+    where: { userId_postId: { userId, postId } },
+  });
+
+  if (existing) {
+    await prisma.bookmark.delete({ where: { id: existing.id } });
+    return { saved: false };
+  }
+
+  await prisma.bookmark.create({ data: { userId, postId } });
+  return { saved: true };
 }
 
 export async function addComment({ postId, authorId, text }) {

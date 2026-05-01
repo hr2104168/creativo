@@ -20,6 +20,7 @@ model User {
   posts     Post[]
   comments  Comment[]
   reactions Reaction[]
+  bookmarks Bookmark[]
   following Follow[]   @relation("follower")
   followers Follow[]   @relation("following")
 }
@@ -49,6 +50,7 @@ model Post {
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments  Comment[]
   reactions Reaction[]
+  bookmarks Bookmark[]
 
   @@index([authorId])
   @@index([category])
@@ -72,6 +74,20 @@ model Comment {
 model Reaction {
   id        String   @id @default(cuid())
   type      String
+  createdAt DateTime @default(now())
+  userId    String
+  postId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   userId    String
   postId    String

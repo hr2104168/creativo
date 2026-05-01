@@ -12,7 +12,8 @@ export async function POST(request, { params }) {
     if (!['inspire', 'appreciate'].includes(type))
       return NextResponse.json({ error: 'Invalid reaction type.' }, { status: 400 });
 
-    await toggleReaction(params.id, currentUser.id, type);
+    const { id } = await params;
+    await toggleReaction(id, currentUser.id, type);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);

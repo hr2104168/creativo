@@ -122,6 +122,9 @@ export default function FeedPage() {
     const [selectedCat, setSelectedCat] = useState('poetry')
     const [openComments, setOpenComments] = useState({})
     const [commentInputs, setCommentInputs] = useState({})
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchResults, setSearchResults] = useState([])
+    const [searching, setSearching] = useState(false)
     const [toast, setToast] = useState(null)
     const [confirm, setConfirm] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -159,6 +162,30 @@ export default function FeedPage() {
             .then(r => r.json())
             .then(data => { if (data.users) setUsers(data.users) })
     }, [currentUser])
+
+    useEffect(() => {
+        if (!currentUser) return
+
+        const q = searchQuery.trim()
+        if (!q) {
+            setSearchResults([])
+            setSearching(false)
+            return
+        }
+
+        setSearching(true)
+        const timeout = setTimeout(async () => {
+            try {
+                const res = await fetch(`/api/users/search?q=${encodeURIComponent(q)}`)
+                const data = await res.json()
+                setSearchResults(data.users || [])
+            } finally {
+                setSearching(false)
+            }
+        }, 250)
+
+        return () => clearTimeout(timeout)
+    }, [searchQuery, currentUser])
 
     async function loadPosts() {
         setLoading(true)
@@ -203,6 +230,15 @@ export default function FeedPage() {
         loadPosts()
     }
 
+    async function handleBookmark(postId) {
+        const res = await fetch(`/api/posts/${postId}/bookmark`, { method: 'POST' })
+        const data = await res.json()
+        if (res.ok) {
+            showToast(data.saved ? 'Saved to bookmarks' : 'Removed from bookmarks')
+            loadPosts()
+        }
+    }
+
     async function handleAddComment(postId) {
         const text = commentInputs[postId] || ''
         if (!text.trim()) return
@@ -233,6 +269,9 @@ export default function FeedPage() {
         setUsers(prev => prev.map(u =>
             u.id === userId ? { ...u, isFollowing: !isFollowing } : u
         ))
+        setSearchResults(prev => prev.map(u =>
+            u.id === userId ? { ...u, isFollowing: !isFollowing } : u
+        ))
         loadPosts()
     }
 
@@ -256,14 +295,42 @@ export default function FeedPage() {
                             type="search"
                             placeholder="Search creators…"
                             style={nav.searchInput}
-                            onChange={async e => {
-                                const q = e.target.value.trim()
-                                if (!q) return
-                                const res = await fetch(`/api/users/search?q=${q}`)
-                                const data = await res.json()
-                                // simple: just log results for now
-                            }}
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
                         />
+                        {searchQuery.trim() && (
+                            <div style={nav.searchPanel}>
+                                {searching ? (
+                                    <div style={nav.searchEmpty}>Searching...</div>
+                                ) : searchResults.length === 0 ? (
+                                    <div style={nav.searchEmpty}>No creators found</div>
+                                ) : (
+                                    searchResults.map(u => (
+                                        <div key={u.id} style={nav.searchRow}>
+                                            <Link
+                                                href={`/profile/${u.id}`}
+                                                style={nav.searchUser}
+                                                onClick={() => setSearchQuery('')}
+                                            >
+                                                <Avatar user={u} size={36} />
+                                                <div>
+                                                    <div style={nav.searchName}>@{u.username}</div>
+                                                    <div style={nav.searchMeta}>
+                                                        {u._count.posts} posts · {u._count.followers} followers
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                            <button
+                                                style={u.isFollowing ? discover.followingBtn : discover.followBtn}
+                                                onClick={() => handleFollow(u.id, u.isFollowing)}
+                                            >
+                                                {u.isFollowing ? 'Following' : 'Follow'}
+                                            </button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     <div style={nav.actions}>
@@ -319,6 +386,12 @@ export default function FeedPage() {
                             onClick={() => setActiveTab('explore')}
                         >
                             Explore All
+                        </button>
+                        <button
+                            style={activeTab === 'saved' ? feed.tabActive : feed.tab}
+                            onClick={() => setActiveTab('saved')}
+                        >
+                            Saved
                         </button>
                     </div>
 
@@ -376,7 +449,9 @@ export default function FeedPage() {
                             <p style={emptyState.p}>
                                 {activeTab === 'feed'
                                     ? 'Follow some creators to see their posts here!'
-                                    : 'Be the first to create!'}
+                                    : activeTab === 'saved'
+                                        ? 'Bookmark posts to find them here later.'
+                                        : 'Be the first to create!'}
                             </p>
                         </div>
                     ) : (
@@ -386,6 +461,8 @@ export default function FeedPage() {
                             const userReaction = post.reactions.find(r => r.userId === currentUser.id)
                             const inspireCount = post.reactions.filter(r => r.type === 'inspire').length
                             const appreciateCount = post.reactions.filter(r => r.type === 'appreciate').length
+                            const isBookmarked = post.bookmarks?.some(b => b.userId === currentUser.id)
+                            const bookmarkCount = post._count?.bookmarks || 0
                             const commentsOpen = openComments[post.id]
 
                             return (
@@ -447,12 +524,25 @@ export default function FeedPage() {
                                                 ⭐ {appreciateCount}
                                             </button>
                                         </div>
-                                        <button
-                                            style={card.commentBtn}
-                                            onClick={() => setOpenComments(prev => ({ ...prev, [post.id]: !prev[post.id] }))}
-                                        >
-                                            💬 {post._count.comments}
-                                        </button>
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <button
+                                                style={{
+                                                    ...card.bookmarkBtn,
+                                                    background: isBookmarked ? '#EEEDFE' : 'transparent',
+                                                    color: isBookmarked ? '#3C3489' : '#6B5BA0',
+                                                    border: isBookmarked ? '1.5px solid #C8B8E8' : '1.5px solid transparent',
+                                                }}
+                                                onClick={() => handleBookmark(post.id)}
+                                            >
+                                                🔖 {bookmarkCount}
+                                            </button>
+                                            <button
+                                                style={card.commentBtn}
+                                                onClick={() => setOpenComments(prev => ({ ...prev, [post.id]: !prev[post.id] }))}
+                                            >
+                                                💬 {post._count.comments}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     {/* COMMENTS SECTION */}
@@ -502,7 +592,7 @@ export default function FeedPage() {
 
                 {/* RIGHT SIDEBAR — Discover Creators */}
                 <aside style={layout.discoverSidebar}>
-                    <h3 style={discover.title}>Discover Creators</h3>
+                    <h3 style={discover.title}>Suggested Creators</h3>
                     {users.map(u => (
                         <div key={u.id} style={discover.card}>
                             <Link href={`/profile/${u.id}`} style={discover.userInfo}>
@@ -547,8 +637,14 @@ const nav = {
     bar: { position: 'sticky', top: 0, zIndex: 100, height: '64px', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(127,119,221,0.18)' },
     inner: { display: 'flex', alignItems: 'center', width: '100%', padding: '0 24px', gap: '16px' },
     brand: { fontSize: '20px', fontWeight: '600', color: '#3C3489', fontFamily: "'Cormorant Garamond', serif", flexShrink: 0, textDecoration: 'none' },
-    searchWrap: { flex: 1, maxWidth: '800px', margin: '0 auto' },
+    searchWrap: { flex: 1, maxWidth: '800px', margin: '0 auto', position: 'relative' },
     searchInput: { width: '100%', padding: '9px 16px', background: '#FAF7FF', border: '1.5px solid rgba(127,119,221,0.18)', borderRadius: '9999px', fontSize: '14px', color: '#231647', outline: 'none', fontFamily: "'DM Sans', sans-serif" },
+    searchPanel: { position: 'absolute', top: '44px', left: 0, right: 0, background: '#fff', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '18px', padding: '8px', boxShadow: '0 16px 40px rgba(100,60,180,0.16)', zIndex: 200 },
+    searchRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', padding: '8px', borderRadius: '12px' },
+    searchUser: { display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1, textDecoration: 'none' },
+    searchName: { fontSize: '13px', fontWeight: '600', color: '#231647' },
+    searchMeta: { fontSize: '11px', color: '#A99BC7' },
+    searchEmpty: { padding: '14px', textAlign: 'center', fontSize: '13px', color: '#A99BC7' },
     actions: { display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', flexShrink: 0 },
     profileBtn: { display: 'flex', alignItems: 'center', padding: '5px 12px 5px 5px', gap: '8px', borderRadius: '20px', textDecoration: 'none', transition: '0.2s' },
     username: { fontSize: '14px', fontWeight: '500', color: '#6B5BA0' },
@@ -597,6 +693,7 @@ const card = {
     content: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.05rem', fontStyle: 'italic', color: '#231647', lineHeight: '1.75', letterSpacing: '0.01em', padding: '8px 0 4px', margin: 0 },
     footer: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', paddingTop: '12px', borderTop: '1px solid rgba(127,119,221,0.18)', marginTop: '8px' },
     reactionBtn: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: '0.2s', fontFamily: "'DM Sans', sans-serif" },
+    bookmarkBtn: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', transition: '0.2s', fontFamily: "'DM Sans', sans-serif" },
     commentBtn: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', color: '#6B5BA0', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
 }
 

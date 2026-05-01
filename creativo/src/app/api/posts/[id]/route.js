@@ -8,7 +8,8 @@ export async function DELETE(request, { params }) {
     if (!currentUser)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const deleted = await deletePost(params.id, currentUser.id);
+    const { id } = await params;
+    const deleted = await deletePost(id, currentUser.id);
     if (!deleted)
       return NextResponse.json({ error: 'Not found or forbidden.' }, { status: 404 });
 

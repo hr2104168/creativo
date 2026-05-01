@@ -7,10 +7,12 @@ export async function POST(request, { params }) {
     const currentUser = await getSessionUser();
     if (!currentUser)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    if (currentUser.id === params.id)
+
+    const { id } = await params;
+    if (currentUser.id === id)
       return NextResponse.json({ error: 'Cannot follow yourself.' }, { status: 400 });
 
-    await followUser(currentUser.id, params.id);
+    await followUser(currentUser.id, id);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);
@@ -24,7 +26,8 @@ export async function DELETE(request, { params }) {
     if (!currentUser)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    await unfollowUser(currentUser.id, params.id);
+    const { id } = await params;
+    await unfollowUser(currentUser.id, id);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);

@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Creativo is a Next.js social platform for sharing short creative messages, following creators, reacting, commenting, and editing user profiles.
 
 ## Getting Started
 
-First, run the development server:
+From a fresh copy of the project, run these commands inside the `creativo` folder:
 
 ```bash
+npm install
+cp .env.example .env
+npm run db:migrate
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+The local database uses SQLite. The default `.env` value is:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+DATABASE_URL="file:./dev.db"
+```
 
-## Learn More
+## Demo Accounts
 
-To learn more about Next.js, take a look at the following resources:
+The seed file creates several accounts and posts. You can log in with any of these:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```text
+luna@creativo.app / Luna1234!
+ink@creativo.app / Ink12345!
+reem@creativo.app / Reem1234!
+spark@creativo.app / Spark123!
+noor@creativo.app / Noor1234!
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Useful Commands
 
-## Deploy on Vercel
+```bash
+npm run dev        # start the development server
+npm run build      # create a production build
+npm run start      # run the production build
+npm run db:migrate # apply Prisma migrations
+npm run db:seed    # reset and populate the database with demo data
+npm run db:studio  # inspect the SQLite data in Prisma Studio
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Phase 2 Demo Flow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Log in as `luna@creativo.app`.
+2. Share two new messages from the feed.
+3. Open Luna's profile and show both messages.
+4. Delete one message and show the profile count updates.
+5. Follow another creator from search or Suggested Creators.
+6. Open My Feed and show followed creator posts.
+7. Unfollow that creator and show those posts leave My Feed.
+8. Bookmark a post and show that it appears in the Saved tab.
+9. Log out, then log in as a different seeded user.
+10. Visit Luna's profile and show the remaining message is still visible.
+11. Show the profile statistics before and after creating, following, or deleting content.

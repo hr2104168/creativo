@@ -21,7 +21,12 @@ export async function getUserByEmail(email) {
 export async function searchUsers(query) {
   return prisma.user.findMany({
     where: { username: { contains: query } },
-    select: { id: true, username: true, profilePicture: true },
+    select: {
+      id: true,
+      username: true,
+      profilePicture: true,
+      _count: { select: { posts: true, followers: true } },
+    },
     take: 10,
     orderBy: { username: 'asc' },
   });
@@ -35,6 +40,7 @@ export async function getAllUsersExcept(currentUserId) {
       _count: { select: { posts: true, followers: true } },
     },
     orderBy: { username: 'asc' },
+    take: 6,
   });
 }
 

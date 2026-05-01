@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/session';
-import { getFeedPosts, getExplorePosts, createPost } from '@/lib/repository/postRepository';
+import { getFeedPosts, getExplorePosts, getSavedPosts, createPost } from '@/lib/repository/postRepository';
 
 export async function GET(request) {
   try {
@@ -13,9 +13,14 @@ export async function GET(request) {
     const category = searchParams.get('category') || 'all';
     const page     = parseInt(searchParams.get('page') || '1', 10);
 
-    const posts = tab === 'feed'
-      ? await getFeedPosts({ userId: currentUser.id, category, page })
-      : await getExplorePosts({ category, page });
+    let posts;
+    if (tab === 'feed') {
+      posts = await getFeedPosts({ userId: currentUser.id, category, page });
+    } else if (tab === 'saved') {
+      posts = await getSavedPosts({ userId: currentUser.id, category, page });
+    } else {
+      posts = await getExplorePosts({ category, page });
+    }
 
     return NextResponse.json({ posts });
   } catch (err) {

@@ -50,6 +50,17 @@ const COMMENTS_POOL = [
   'This prompt unlocked something in me.',
 ];
 
+const BOOKMARK_PAIRS = [
+  [0, 2],
+  [0, 6],
+  [1, 0],
+  [1, 8],
+  [2, 1],
+  [3, 4],
+  [4, 7],
+  [5, 9],
+];
+
 function randomItems(arr, count) {
   const shuffled = [...arr].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);
@@ -64,6 +75,7 @@ function daysAgo(n) {
 async function main() {
   console.log('🌱 Starting seed...');
 
+  await prisma.bookmark.deleteMany();
   await prisma.reaction.deleteMany();
   await prisma.comment.deleteMany();
   await prisma.follow.deleteMany();
@@ -138,6 +150,17 @@ async function main() {
     }
   }
   console.log(`  ✓ Created ${reactionCount} reactions`);
+
+  for (const [userIndex, postIndex] of BOOKMARK_PAIRS) {
+    await prisma.bookmark.create({
+      data: {
+        userId: createdUsers[userIndex].id,
+        postId: createdPosts[postIndex].id,
+        createdAt: daysAgo(Math.floor(Math.random() * 30)),
+      },
+    });
+  }
+  console.log(`  ✓ Created ${BOOKMARK_PAIRS.length} bookmarks`);
 
   let commentCount = 0;
   for (const post of createdPosts) {

@@ -14,7 +14,8 @@ export async function POST(request, { params }) {
     if (text.length > 300)
       return NextResponse.json({ error: 'Max 300 characters.' }, { status: 400 });
 
-    const comment = await addComment({ postId: params.id, authorId: currentUser.id, text });
+    const { id } = await params;
+    const comment = await addComment({ postId: id, authorId: currentUser.id, text });
     return NextResponse.json({ comment }, { status: 201 });
   } catch (err) {
     console.error(err);

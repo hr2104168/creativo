@@ -388,6 +388,17 @@ export default function ProfilePage() {
       .then(data => { if (data.posts) setPosts(data.posts) })
   }
 
+  async function handleBookmark(postId) {
+    const res = await fetch(`/api/posts/${postId}/bookmark`, { method: 'POST' })
+    const data = await res.json()
+    if (res.ok) {
+      showToast(data.saved ? 'Saved to bookmarks' : 'Removed from bookmarks')
+      fetch(`/api/users/${userId}`)
+        .then(r => r.json())
+        .then(data => { if (data.posts) setPosts(data.posts) })
+    }
+  }
+
   async function handleAddComment(postId) {
     const text = commentInputs[postId] || ''
     if (!text.trim()) return
@@ -575,6 +586,8 @@ export default function ProfilePage() {
                 const userReaction = post.reactions?.find(r => r.userId === currentUser.id)
                 const inspireCount    = post.reactions?.filter(r => r.type === 'inspire').length || 0
                 const appreciateCount = post.reactions?.filter(r => r.type === 'appreciate').length || 0
+                const isBookmarked = post.bookmarks?.some(b => b.userId === currentUser.id)
+                const bookmarkCount = post._count?.bookmarks || 0
                 const commentsOpen = openComments[post.id]
 
                 return (
@@ -624,12 +637,28 @@ export default function ProfilePage() {
                           ⭐ {appreciateCount}
                         </button>
                       </div>
-                      <button
-                        onClick={() => setOpenComments(prev => ({ ...prev, [post.id]: !prev[post.id] }))}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', color: '#6B5BA0', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}
-                      >
-                        💬 {post._count?.comments || 0}
-                      </button>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          onClick={() => handleBookmark(post.id)}
+                          style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '5px',
+                            padding: '6px 12px', borderRadius: '9999px',
+                            fontSize: '13px', fontWeight: '500', cursor: 'pointer',
+                            fontFamily: "'DM Sans', sans-serif",
+                            background: isBookmarked ? '#EEEDFE' : 'transparent',
+                            color: isBookmarked ? '#3C3489' : '#6B5BA0',
+                            border: isBookmarked ? '1.5px solid #C8B8E8' : '1.5px solid transparent',
+                          }}
+                        >
+                          🔖 {bookmarkCount}
+                        </button>
+                        <button
+                          onClick={() => setOpenComments(prev => ({ ...prev, [post.id]: !prev[post.id] }))}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', color: '#6B5BA0', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}
+                        >
+                          💬 {post._count?.comments || 0}
+                        </button>
+                      </div>
                     </div>
 
                     {/* Comments */}

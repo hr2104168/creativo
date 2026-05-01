@@ -13,7 +13,8 @@ export async function POST(request) {
     if (!user)
       return NextResponse.json({ error: 'Incorrect email or password.' }, { status: 401 });
 
-    cookies().set('creativo_session', user.id, {
+    const cookieStore = await cookies();
+    cookieStore.set('creativo_session', user.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

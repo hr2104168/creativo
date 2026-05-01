@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/session';
-import { searchUsers } from '@/lib/repository/userRepository';
+import { isFollowing, searchUsers } from '@/lib/repository/userRepository';
 
 export async function GET(request) {
   try {
@@ -12,7 +12,15 @@ export async function GET(request) {
     if (!q.trim()) return NextResponse.json({ users: [] });
 
     const users = await searchUsers(q.trim());
-    return NextResponse.json({ users });
+    const withFollow = await Promise.all(
+      users
+        .filter(u => u.id !== currentUser.id)
+        .map(async u => ({
+          ...u,
+          isFollowing: await isFollowing(currentUser.id, u.id),
+        }))
+    );
+    return NextResponse.json({ users: withFollow });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });

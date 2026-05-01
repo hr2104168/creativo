@@ -9,9 +9,10 @@ export async function GET(request, { params }) {
     if (!currentUser)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const { id } = await params;
     const [user, posts] = await Promise.all([
-      getUserById(params.id),
-      getPostsByUser(params.id),
+      getUserById(id),
+      getPostsByUser(id),
     ]);
     if (!user)
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
@@ -26,14 +27,15 @@ export async function GET(request, { params }) {
 export async function PATCH(request, { params }) {
   try {
     const currentUser = await getSessionUser();
-    if (!currentUser || currentUser.id !== params.id)
+    const { id } = await params;
+    if (!currentUser || currentUser.id !== id)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { username, bio, profilePicture } = await request.json();
     if (username && username.length < 3)
       return NextResponse.json({ error: 'Username too short.' }, { status: 400 });
 
-    const updated = await updateUser(params.id, {
+    const updated = await updateUser(id, {
       ...(username && { username }),
       ...(bio !== undefined && { bio }),
       ...(profilePicture !== undefined && { profilePicture }),
