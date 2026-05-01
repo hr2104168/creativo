@@ -1,60 +1,29 @@
-import { NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
-import prisma from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import { verifyCredentials } from '@/lib/repository/userRepository';
+import { cookies } from 'next/headers';
 
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const { email, password } = await req.json()
+    const { email, password } = await request.json();
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password are required.' },
-        { status: 400 }
-      )
-    }
+    if (!email || !password)
+      return NextResponse.json({ error: 'All fields required.' }, { status: 400 });
 
-    const user = await prisma.user.findUnique({
-      where: { email }
-    })
+    const user = await verifyCredentials(email, password);
+    if (!user)
+      return NextResponse.json({ error: 'Incorrect email or password.' }, { status: 401 });
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid email or password.' },
-        { status: 401 }
-      )
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.password)
-
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: 'Invalid email or password.' },
-        { status: 401 }
-      )
-    }
-
-    const res = NextResponse.json({
-      message: 'Login successful',
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
-    })
-
-    res.cookies.set('userId', user.id, {
+    cookies().set('creativo_session', user.id, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
       path: '/',
-      maxAge: 60 * 60 * 24 * 7
-    })
+    });
 
-    return res
+    return NextResponse.json({ user });
   } catch (err) {
-    console.error('Login error:', err)
-    return NextResponse.json(
-      { error: 'Something went wrong. Please try again.' },
-      { status: 500 }
-    )
+    console.error(err);
+    return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }
