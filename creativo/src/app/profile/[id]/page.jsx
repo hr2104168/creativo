@@ -228,7 +228,7 @@ function EditProfileModal({ user, onClose, onSave, showToast }) {
                   {uploading ? 'Uploading…' : previewUrl ? 'Change photo' : 'Upload photo'}
                 </span>
                 <span style={{ fontSize: '11px', color: '#A99BC7' }}>
-                  Drag & drop or click · Max 2 MB
+                  Click to choose a file · Max 2 MB
                 </span>
                 <input
                   type="file"
@@ -318,6 +318,12 @@ export default function ProfilePage() {
     setConfirm({ title, message, onConfirm })
   }
 
+  function updatePost(postId, changePost) {
+    setPosts(prev => prev.map(post =>
+      post.id === postId ? changePost(post) : post
+    ))
+  }
+
   // Load current logged-in user
   useEffect(() => {
     fetch('/api/auth/me')
@@ -377,15 +383,38 @@ export default function ProfilePage() {
   }
 
   async function handleReact(postId, type) {
-    await fetch(`/api/posts/${postId}/reactions`, {
+    const res = await fetch(`/api/posts/${postId}/reactions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type }),
     })
-    // Refresh posts
-    fetch(`/api/users/${userId}`)
-      .then(r => r.json())
-      .then(data => { if (data.posts) setPosts(data.posts) })
+    if (!res.ok) return
+
+    updatePost(postId, post => {
+      const reactions = post.reactions || []
+      const existing = reactions.find(r => r.userId === currentUser.id)
+
+      if (!existing) {
+        return {
+          ...post,
+          reactions: [...reactions, { id: `new-${postId}-${currentUser.id}`, userId: currentUser.id, type }],
+        }
+      }
+
+      if (existing.type === type) {
+        return {
+          ...post,
+          reactions: reactions.filter(r => r.userId !== currentUser.id),
+        }
+      }
+
+      return {
+        ...post,
+        reactions: reactions.map(r =>
+          r.userId === currentUser.id ? { ...r, type } : r
+        ),
+      }
+    })
   }
 
   async function handleBookmark(postId) {
@@ -393,9 +422,21 @@ export default function ProfilePage() {
     const data = await res.json()
     if (res.ok) {
       showToast(data.saved ? 'Saved to bookmarks' : 'Removed from bookmarks')
-      fetch(`/api/users/${userId}`)
-        .then(r => r.json())
-        .then(data => { if (data.posts) setPosts(data.posts) })
+      updatePost(postId, post => {
+        const bookmarks = post.bookmarks || []
+        const currentCount = post._count?.bookmarks || 0
+
+        return {
+          ...post,
+          bookmarks: data.saved
+            ? [...bookmarks, { id: `new-${postId}-${currentUser.id}`, userId: currentUser.id }]
+            : bookmarks.filter(b => b.userId !== currentUser.id),
+          _count: {
+            ...post._count,
+            bookmarks: data.saved ? currentCount + 1 : Math.max(0, currentCount - 1),
+          },
+        }
+      })
     }
   }
 
@@ -408,20 +449,33 @@ export default function ProfilePage() {
       body: JSON.stringify({ text }),
     })
     if (res.ok) {
+      const data = await res.json()
       setCommentInputs(prev => ({ ...prev, [postId]: '' }))
-      fetch(`/api/users/${userId}`)
-        .then(r => r.json())
-        .then(data => { if (data.posts) setPosts(data.posts) })
+      updatePost(postId, post => ({
+        ...post,
+        comments: [...(post.comments || []), data.comment],
+        _count: {
+          ...post._count,
+          comments: (post._count?.comments || 0) + 1,
+        },
+      }))
     }
   }
 
   async function handleDeleteComment(postId, commentId) {
     askConfirm('Delete this comment?', '', async () => {
       setConfirm(null)
-      await fetch(`/api/comments/${commentId}`, { method: 'DELETE' })
-      fetch(`/api/users/${userId}`)
-        .then(r => r.json())
-        .then(data => { if (data.posts) setPosts(data.posts) })
+      const res = await fetch(`/api/comments/${commentId}`, { method: 'DELETE' })
+      if (res.ok) {
+        updatePost(postId, post => ({
+          ...post,
+          comments: (post.comments || []).filter(c => c.id !== commentId),
+          _count: {
+            ...post._count,
+            comments: Math.max(0, (post._count?.comments || 0) - 1),
+          },
+        }))
+      }
     })
   }
 
@@ -450,6 +504,9 @@ export default function ProfilePage() {
             ✦ Creativo
           </Link>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Link href="/stats" style={{ padding: '8px 14px', borderRadius: '9999px', color: '#6B5BA0', background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>
+              Stats
+            </Link>
             <Link href={`/profile/${currentUser.id}`} style={{ display: 'flex', alignItems: 'center', padding: '5px 12px 5px 5px', gap: '8px', borderRadius: '20px', textDecoration: 'none' }}>
               <Avatar user={currentUser} size={32} />
               <span style={{ fontSize: '14px', fontWeight: '500', color: '#6B5BA0' }}>@{currentUser.username}</span>

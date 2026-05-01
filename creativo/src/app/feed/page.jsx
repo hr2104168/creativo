@@ -198,6 +198,12 @@ export default function FeedPage() {
         }
     }
 
+    function updatePost(postId, changePost) {
+        setPosts(prev => prev.map(post =>
+            post.id === postId ? changePost(post) : post
+        ))
+    }
+
     async function handleSubmitPost() {
         if (!postContent.trim()) { showToast('Write something creative first!', 'error'); return }
         if (postContent.length > 200) { showToast('Keep it under 200 characters!', 'error'); return }
@@ -217,17 +223,46 @@ export default function FeedPage() {
         askConfirm('Delete this post?', 'This cannot be undone.', async () => {
             setConfirm(null)
             const res = await fetch(`/api/posts/${postId}`, { method: 'DELETE' })
-            if (res.ok) { showToast('Post deleted'); loadPosts() }
+            if (res.ok) {
+                setPosts(prev => prev.filter(post => post.id !== postId))
+                showToast('Post deleted')
+            }
         })
     }
 
     async function handleReact(postId, type) {
-        await fetch(`/api/posts/${postId}/reactions`, {
+        const res = await fetch(`/api/posts/${postId}/reactions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ type }),
         })
-        loadPosts()
+        if (!res.ok) return
+
+        updatePost(postId, post => {
+            const reactions = post.reactions || []
+            const existing = reactions.find(r => r.userId === currentUser.id)
+
+            if (!existing) {
+                return {
+                    ...post,
+                    reactions: [...reactions, { id: `new-${postId}-${currentUser.id}`, userId: currentUser.id, type }],
+                }
+            }
+
+            if (existing.type === type) {
+                return {
+                    ...post,
+                    reactions: reactions.filter(r => r.userId !== currentUser.id),
+                }
+            }
+
+            return {
+                ...post,
+                reactions: reactions.map(r =>
+                    r.userId === currentUser.id ? { ...r, type } : r
+                ),
+            }
+        })
     }
 
     async function handleBookmark(postId) {
@@ -235,7 +270,26 @@ export default function FeedPage() {
         const data = await res.json()
         if (res.ok) {
             showToast(data.saved ? 'Saved to bookmarks' : 'Removed from bookmarks')
-            loadPosts()
+            if (activeTab === 'saved' && !data.saved) {
+                setPosts(prev => prev.filter(post => post.id !== postId))
+                return
+            }
+
+            updatePost(postId, post => {
+                const bookmarks = post.bookmarks || []
+                const currentCount = post._count?.bookmarks || 0
+
+                return {
+                    ...post,
+                    bookmarks: data.saved
+                        ? [...bookmarks, { id: `new-${postId}-${currentUser.id}`, userId: currentUser.id }]
+                        : bookmarks.filter(b => b.userId !== currentUser.id),
+                    _count: {
+                        ...post._count,
+                        bookmarks: data.saved ? currentCount + 1 : Math.max(0, currentCount - 1),
+                    },
+                }
+            })
         }
     }
 
@@ -248,16 +302,33 @@ export default function FeedPage() {
             body: JSON.stringify({ text }),
         })
         if (res.ok) {
+            const data = await res.json()
             setCommentInputs(prev => ({ ...prev, [postId]: '' }))
-            loadPosts()
+            updatePost(postId, post => ({
+                ...post,
+                comments: [...(post.comments || []), data.comment],
+                _count: {
+                    ...post._count,
+                    comments: (post._count?.comments || 0) + 1,
+                },
+            }))
         }
     }
 
     async function handleDeleteComment(postId, commentId) {
         askConfirm('Delete this comment?', '', async () => {
             setConfirm(null)
-            await fetch(`/api/comments/${commentId}`, { method: 'DELETE' })
-            loadPosts()
+            const res = await fetch(`/api/comments/${commentId}`, { method: 'DELETE' })
+            if (res.ok) {
+                updatePost(postId, post => ({
+                    ...post,
+                    comments: (post.comments || []).filter(c => c.id !== commentId),
+                    _count: {
+                        ...post._count,
+                        comments: Math.max(0, (post._count?.comments || 0) - 1),
+                    },
+                }))
+            }
         })
     }
 
@@ -334,6 +405,7 @@ export default function FeedPage() {
                     </div>
 
                     <div style={nav.actions}>
+                        <Link href="/stats" style={nav.statsBtn}>Stats</Link>
                         <Link href={`/profile/${currentUser.id}`} style={nav.profileBtn}>
                             <Avatar user={currentUser} size={32} />
                             <span style={nav.username}>@{currentUser.username}</span>
@@ -646,6 +718,7 @@ const nav = {
     searchMeta: { fontSize: '11px', color: '#A99BC7' },
     searchEmpty: { padding: '14px', textAlign: 'center', fontSize: '13px', color: '#A99BC7' },
     actions: { display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto', flexShrink: 0 },
+    statsBtn: { padding: '8px 14px', borderRadius: '9999px', color: '#6B5BA0', background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', textDecoration: 'none', fontSize: '14px', fontWeight: '500' },
     profileBtn: { display: 'flex', alignItems: 'center', padding: '5px 12px 5px 5px', gap: '8px', borderRadius: '20px', textDecoration: 'none', transition: '0.2s' },
     username: { fontSize: '14px', fontWeight: '500', color: '#6B5BA0' },
     logoutBtn: { padding: '5px 12px', borderRadius: '20px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#6B5BA0' },
