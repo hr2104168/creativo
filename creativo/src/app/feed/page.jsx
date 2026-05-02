@@ -190,6 +190,13 @@ export default function FeedPage() {
         return () => clearTimeout(timeout)
     }, [searchQuery, currentUser])
 
+    useEffect(() => {
+        if (selectedCat !== 'artidea') {
+            setArtFile(null)
+            setArtPreview('')
+        }
+    }, [selectedCat])
+
     async function loadPosts() {
         setLoading(true)
         try {
@@ -211,6 +218,12 @@ export default function FeedPage() {
         const file = e.target.files?.[0]
         if (!file) return
 
+        if (selectedCat !== 'artidea') {
+            showToast('Choose Art Idea before adding artwork.', 'error')
+            e.target.value = ''
+            return
+        }
+
         const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
         if (!allowed.includes(file.type)) {
             showToast('Only JPEG, PNG, WebP, GIF allowed.', 'error')
@@ -223,7 +236,6 @@ export default function FeedPage() {
 
         setArtFile(file)
         setArtPreview(URL.createObjectURL(file))
-        setSelectedCat('artidea')
     }
 
     function clearArtFile() {
@@ -234,35 +246,45 @@ export default function FeedPage() {
     async function handleSubmitPost() {
         if (!postContent.trim()) { showToast('Write a caption first!', 'error'); return }
         if (postContent.length > 200) { showToast('Keep it under 200 characters!', 'error'); return }
+        if (artFile && selectedCat !== 'artidea') { showToast('Artwork can only be added to Art Idea posts.', 'error'); return }
 
         setPosting(true)
-        let imageUrl = null
+        try {
+            let imageUrl = null
 
-        if (artFile) {
-            const form = new FormData()
-            form.append('file', artFile)
-            const uploadRes = await fetch('/api/upload', { method: 'POST', body: form })
-            const uploadData = await uploadRes.json()
-            if (!uploadRes.ok) {
-                showToast(uploadData.error || 'Image upload failed.', 'error')
-                setPosting(false)
+            if (artFile) {
+                const form = new FormData()
+                form.append('file', artFile)
+                const uploadRes = await fetch('/api/upload', { method: 'POST', body: form })
+                const uploadData = await uploadRes.json().catch(() => ({}))
+                if (!uploadRes.ok) {
+                    showToast(uploadData.error || 'Image upload failed.', 'error')
+                    return
+                }
+                imageUrl = uploadData.url
+            }
+
+            const res = await fetch('/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: postContent, category: selectedCat, imageUrl }),
+            })
+            const data = await res.json().catch(() => ({}))
+
+            if (!res.ok) {
+                showToast(data.error || 'Post failed. Please try again.', 'error')
                 return
             }
-            imageUrl = uploadData.url
-        }
 
-        const res = await fetch('/api/posts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: postContent, category: selectedCat, imageUrl }),
-        })
-        if (res.ok) {
             setPostContent('')
             clearArtFile()
             showToast('Your creation is live! ✨')
             loadPosts()
+        } catch {
+            showToast('Image upload failed. Please try again.', 'error')
+        } finally {
+            setPosting(false)
         }
-        setPosting(false)
     }
 
     async function handleDeletePost(postId) {
@@ -398,6 +420,7 @@ export default function FeedPage() {
     }
 
     if (!currentUser) return null
+    const isArtIdea = selectedCat === 'artidea'
 
     return (
         <div style={{ minHeight: '100vh', background: '#F5F0FF' }}>
@@ -553,15 +576,17 @@ export default function FeedPage() {
                                 ))}
                             </div>
                             <div style={create.actions}>
-                                <label style={create.uploadBtn}>
-                                    Show your art
-                                    <input
-                                        type="file"
-                                        accept="image/jpeg,image/png,image/webp,image/gif"
-                                        style={{ display: 'none' }}
-                                        onChange={handleArtFileChange}
-                                    />
-                                </label>
+                                {isArtIdea && (
+                                    <label style={create.uploadBtn}>
+                                        Show your art
+                                        <input
+                                            type="file"
+                                            accept="image/jpeg,image/png,image/webp,image/gif"
+                                            style={{ display: 'none' }}
+                                            onChange={handleArtFileChange}
+                                        />
+                                    </label>
+                                )}
                                 <span style={{ fontSize: '13px', color: '#A99BC7', fontWeight: '500' }}>
                                     {200 - postContent.length}
                                 </span>

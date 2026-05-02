@@ -104,6 +104,65 @@ function ConfirmDialog({ title, message, onConfirm, onCancel }) {
   )
 }
 
+function SocialListModal({ title, users, loading, onClose }) {
+  return (
+    <div style={{
+      position: 'fixed', inset: 0,
+      background: 'rgba(0,0,0,0.45)',
+      backdropFilter: 'blur(4px)',
+      zIndex: 500, display: 'flex',
+      alignItems: 'center', justifyContent: 'center', padding: '16px',
+    }} onClick={onClose}>
+      <div style={{
+        background: '#fff', borderRadius: '20px',
+        width: '100%', maxWidth: '420px',
+        maxHeight: '80vh', overflowY: 'auto',
+        boxShadow: '0 16px 48px rgba(100,60,180,0.20)',
+      }} onClick={e => e.stopPropagation()}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 22px', borderBottom: '1px solid rgba(127,119,221,0.18)' }}>
+          <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.35rem', color: '#2C2C2A', margin: 0 }}>
+            {title}
+          </h3>
+          <button onClick={onClose} style={{ fontSize: '18px', color: '#A99BC7', background: 'none', border: 'none', cursor: 'pointer' }}>✕</button>
+        </div>
+
+        <div style={{ padding: '12px' }}>
+          {loading && (
+            <p style={{ color: '#A99BC7', fontSize: '14px', textAlign: 'center', padding: '24px 0', margin: 0 }}>
+              Loading...
+            </p>
+          )}
+
+          {!loading && users.length === 0 && (
+            <p style={{ color: '#A99BC7', fontSize: '14px', textAlign: 'center', padding: '24px 0', margin: 0 }}>
+              No users to show yet.
+            </p>
+          )}
+
+          {!loading && users.map(user => (
+            <Link
+              key={user.id}
+              href={`/profile/${user.id}`}
+              onClick={onClose}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '14px', textDecoration: 'none' }}
+            >
+              <Avatar user={user} size={44} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: '14px', fontWeight: '600', color: '#231647' }}>
+                  @{user.username}
+                </div>
+                <div style={{ fontSize: '12px', color: '#A99BC7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user.bio || `${user._count?.posts || 0} posts · ${user._count?.followers || 0} followers`}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function EditProfileModal({ user, onClose, onSave, showToast }) {
   const [username, setUsername]         = useState(user.username)
   const [bio, setBio]                   = useState(user.bio || '')
@@ -306,6 +365,9 @@ export default function ProfilePage() {
   const [toast, setToast]               = useState(null)
   const [confirm, setConfirm]           = useState(null)
   const [loading, setLoading]           = useState(true)
+  const [userListModal, setUserListModal] = useState(null)
+  const [userList, setUserList]         = useState([])
+  const [userListLoading, setUserListLoading] = useState(false)
   const [openComments, setOpenComments] = useState({})
   const [commentInputs, setCommentInputs] = useState({})
 
@@ -316,6 +378,28 @@ export default function ProfilePage() {
 
   function askConfirm(title, message, onConfirm) {
     setConfirm({ title, message, onConfirm })
+  }
+
+  async function openUserList(listType) {
+    if (!profileUser) return
+
+    setUserList([])
+    setUserListLoading(true)
+    setUserListModal(listType)
+
+    try {
+      const res = await fetch(`/api/users/${profileUser.id}/follows?type=${listType}`)
+      const data = await res.json()
+      if (!res.ok) {
+        showToast(data.error || 'Could not load users.', 'error')
+        return
+      }
+      setUserList(data.users || [])
+    } catch {
+      showToast('Could not load users.', 'error')
+    } finally {
+      setUserListLoading(false)
+    }
   }
 
   function updatePost(postId, changePost) {
@@ -551,35 +635,48 @@ export default function ProfilePage() {
                 </p>
 
                 {/* Bio */}
-                <div style={{ background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '14px', padding: '12px 14px', marginBottom: '20px', textAlign: 'left' }}>
-                  <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#6B5BA0', margin: '0 0 8px 0', whiteSpace: 'pre-wrap' }}>
-                    {profileUser.bio || 'No bio yet.'}
-                  </p>
-                  {isOwn && (
-                    <button
-                      onClick={() => setShowEditModal(true)}
-                      style={{ fontSize: '12px', color: '#7F77DD', background: 'none', border: 'none', cursor: 'pointer', padding: '3px 8px', borderRadius: '8px', fontFamily: "'DM Sans', sans-serif" }}
-                    >
-                      ✎ Edit bio
-                    </button>
-                  )}
-                </div>
+                {(isOwn || profileUser.bio) && (
+                  <div style={{ background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '14px', padding: '12px 14px', marginBottom: '20px', textAlign: 'left' }}>
+                    <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#6B5BA0', margin: isOwn ? '0 0 8px 0' : 0, whiteSpace: 'pre-wrap' }}>
+                      {profileUser.bio || 'No bio yet.'}
+                    </p>
+                    {isOwn && (
+                      <button
+                        onClick={() => setShowEditModal(true)}
+                        style={{ fontSize: '12px', color: '#7F77DD', background: 'none', border: 'none', cursor: 'pointer', padding: '3px 8px', borderRadius: '8px', fontFamily: "'DM Sans', sans-serif" }}
+                      >
+                        ✎ Edit bio
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {/* Stats */}
                 <div style={{ display: 'flex', justifyContent: 'space-around', padding: '16px 0', borderTop: '1px solid rgba(127,119,221,0.18)', borderBottom: '1px solid rgba(127,119,221,0.18)', marginBottom: '20px' }}>
                   {[
-                    { number: posts.length,                  label: 'posts' },
-                    { number: followerCount,                  label: 'followers' },
-                    { number: profileUser._count?.following || 0, label: 'following' },
+                    { number: posts.length, label: 'posts' },
+                    { number: followerCount, label: 'followers', listType: 'followers' },
+                    { number: profileUser._count?.following || 0, label: 'following', listType: 'following' },
                   ].map(stat => (
-                    <div key={stat.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+                    <button
+                      key={stat.label}
+                      type="button"
+                      onClick={() => stat.listType && openUserList(stat.listType)}
+                      disabled={!stat.listType}
+                      style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px',
+                        background: 'none', border: 'none',
+                        cursor: stat.listType ? 'pointer' : 'default',
+                        fontFamily: "'DM Sans', sans-serif", padding: '2px 6px',
+                      }}
+                    >
                       <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.4rem', fontWeight: '700', color: '#3C3489' }}>
                         {stat.number}
                       </span>
                       <span style={{ fontSize: '11px', color: '#A99BC7', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                         {stat.label}
                       </span>
-                    </div>
+                    </button>
                   ))}
                 </div>
 
@@ -780,8 +877,19 @@ export default function ProfilePage() {
           onClose={() => setShowEditModal(false)}
           onSave={updatedUser => {
             setProfileUser(prev => ({ ...prev, ...updatedUser }))
+            setCurrentUser(prev => prev?.id === updatedUser.id ? { ...prev, ...updatedUser } : prev)
           }}
           showToast={showToast}
+        />
+      )}
+
+      {/* FOLLOWERS / FOLLOWING MODAL */}
+      {userListModal && (
+        <SocialListModal
+          title={userListModal === 'followers' ? 'Followers' : 'Following'}
+          users={userList}
+          loading={userListLoading}
+          onClose={() => setUserListModal(null)}
         />
       )}
 

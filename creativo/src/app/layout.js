@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body style={{
+      <body suppressHydrationWarning style={{
         margin: 0,
         padding: 0,
         fontFamily: "'DM Sans', sans-serif",

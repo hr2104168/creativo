@@ -44,6 +44,46 @@ export async function getAllUsersExcept(currentUserId) {
   });
 }
 
+export async function getFollowers(userId) {
+  const follows = await prisma.follow.findMany({
+    where: { followingId: userId },
+    include: {
+      follower: {
+        select: {
+          id: true,
+          username: true,
+          profilePicture: true,
+          bio: true,
+          _count: { select: { posts: true, followers: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return follows.map(follow => follow.follower);
+}
+
+export async function getFollowing(userId) {
+  const follows = await prisma.follow.findMany({
+    where: { followerId: userId },
+    include: {
+      following: {
+        select: {
+          id: true,
+          username: true,
+          profilePicture: true,
+          bio: true,
+          _count: { select: { posts: true, followers: true } },
+        },
+      },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return follows.map(follow => follow.following);
+}
+
 export async function isFollowing(followerId, followingId) {
   const follow = await prisma.follow.findUnique({
     where: { followerId_followingId: { followerId, followingId } },

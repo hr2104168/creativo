@@ -40,6 +40,8 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Content is required.' }, { status: 400 });
     if (content.length > 200)
       return NextResponse.json({ error: 'Max 200 characters.' }, { status: 400 });
+    if (imageUrl && category !== 'artidea')
+      return NextResponse.json({ error: 'Artwork can only be added to Art Idea posts.' }, { status: 400 });
 
     const post = await createPost({ authorId: currentUser.id, content, category, imageUrl });
     return NextResponse.json({ post }, { status: 201 });
