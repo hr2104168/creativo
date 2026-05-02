@@ -86,6 +86,56 @@ textarea {
 }
 
 @media (max-width: 1080px) {
+  .auth-page {
+    display: block !important;
+    min-height: 100dvh !important;
+    background: #FAF8F5 !important;
+  }
+
+  .auth-left-panel {
+    display: none !important;
+  }
+
+  .auth-right-panel {
+    min-height: 100dvh !important;
+    width: 100% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: calc(env(safe-area-inset-top) + 32px) 22px calc(env(safe-area-inset-bottom) + 36px) !important;
+    overflow: visible !important;
+  }
+
+  .auth-form-wrap {
+    width: 100% !important;
+    max-width: 380px !important;
+    margin: 0 auto !important;
+  }
+
+  .auth-mobile-brand {
+    display: block;
+    margin: 0 0 24px;
+    color: #3C3489;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .auth-heading {
+    font-size: 38px !important;
+    line-height: 1.05 !important;
+  }
+
+  .auth-sub {
+    margin-bottom: 26px !important;
+    line-height: 1.5 !important;
+  }
+
+  .auth-input,
+  .auth-submit {
+    width: 100% !important;
+  }
+
   .feed-layout {
     grid-template-columns: 200px minmax(0, 1fr) !important;
     max-width: 960px !important;
@@ -97,70 +147,6 @@ textarea {
 }
 
 @media (max-width: 900px) {
-  .auth-page {
-    grid-template-columns: 1fr !important;
-    min-height: 100dvh !important;
-  }
-
-  .auth-left-panel {
-    min-height: auto !important;
-    padding: 28px 22px !important;
-    gap: 24px !important;
-  }
-
-  .auth-quote {
-    flex: initial !important;
-    justify-content: flex-start !important;
-    margin: 18px 0 !important;
-  }
-
-  .auth-quote-mark {
-    font-size: 58px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .auth-quote-text {
-    max-width: 680px !important;
-    font-size: 22px !important;
-    line-height: 1.4 !important;
-  }
-
-  .auth-right-panel {
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    padding: 30px 22px 42px !important;
-    overflow: visible !important;
-  }
-
-  .auth-form-wrap {
-    max-width: 520px !important;
-  }
-
-  .auth-left-panel {
-    display: none !important;
-  }
-
-  .auth-right-panel {
-    min-height: 100dvh !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 32px 20px !important;
-  }
-
-  .auth-form-wrap {
-    max-width: 420px !important;
-    margin: 0 auto !important;
-  }
-
-  .auth-mobile-brand {
-    display: block;
-    margin: 0 0 28px;
-    color: #3C3489;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 600;
-  }
-
   .app-nav {
     height: auto !important;
     min-height: 64px !important;
@@ -249,32 +235,16 @@ textarea {
 }
 
 @media (max-width: 560px) {
-  .auth-left-panel {
-    padding: 24px 18px !important;
-  }
-
-  .auth-brand-name {
-    font-size: 22px !important;
-  }
-
-  .auth-quote-text {
-    font-size: 20px !important;
-  }
-
-  .auth-tags {
-    gap: 5px !important;
-  }
-
-  .auth-tag {
-    padding: 5px 10px !important;
-  }
-
   .auth-right-panel {
-    padding: 26px 18px 36px !important;
+    padding: calc(env(safe-area-inset-top) + 30px) 18px calc(env(safe-area-inset-bottom) + 32px) !important;
   }
 
   .auth-heading {
-    font-size: 30px !important;
+    font-size: 36px !important;
+  }
+
+  .auth-mobile-brand {
+    margin-bottom: 22px !important;
   }
 
   .feed-layout,
