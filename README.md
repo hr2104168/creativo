@@ -1,7 +1,46 @@
 # Creativo
 
-A social media platform for sharing short creative expressions —
-micro-poems, brief stories, inspirational thoughts, and creative prompts.
+Creativo is a Next.js social platform for sharing short creative writing, art ideas, prompts, reactions, comments, bookmarks, and user profiles.
+
+## Run Locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+## Database
+
+Local development uses the SQLite database at:
+
+```text
+prisma/dev.db
+```
+
+Vercel production uses Turso. Add these environment variables in Vercel:
+
+```text
+TURSO_DATABASE_URL
+TURSO_AUTH_TOKEN
+```
+
+## Deploy
+
+This repo is now a root-level Next.js app. Vercel should use:
+
+```text
+Framework Preset: Next.js
+Install Command: npm install
+Build Command: npm run vercel-build
+Output Directory: empty
+Root Directory: empty / repository root
+```
 
 ## Team Members
 
@@ -11,43 +50,3 @@ micro-poems, brief stories, inspirational thoughts, and creative prompts.
 | Mahajuba Rahman | 202311830 | News Feed                         |
 | Ashley Danoy    | 202304384 | Posts (Create, Like, Comment)     |
 | Jawairia Ahmed  | 202208287 | User Profile                      |
-
-## Current App
-
-The Phase 2 Next.js app is inside the `creativo/` folder.
-
-Run it from the repo root with:
-
-```bash
-npm run install:app
-npm run dev
-```
-
-Or run it directly:
-
-```bash
-cd creativo
-npm install
-npm run dev
-```
-
-Then open:
-
-```text
-http://localhost:3000
-```
-
-## Tech Stack
-- Next.js
-- React
-- Prisma
-- SQLite
-
-## Project Structure
-- `creativo/`: Phase 2 Next.js application
-- `creativo/prisma/dev.db`: Shared SQLite database for the class project
-- `creativo/.env`: Local database URL for SQLite
-- `Phae 1 submissions/`: Phase 1 submission files
-
-## Course
-CMPS 350: Web DevelopmentCMPS350 Spring2026 Course Project 

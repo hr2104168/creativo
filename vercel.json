@@ -1,5 +1,4 @@
 {
-  "installCommand": "npm --prefix creativo install",
-  "buildCommand": "npm --prefix creativo run vercel-build",
-  "outputDirectory": "creativo/.next"
+  "installCommand": "npm install",
+  "buildCommand": "npm run vercel-build"
 }
