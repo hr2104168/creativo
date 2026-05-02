@@ -636,7 +636,10 @@ export default function ProfilePage() {
 
                 {/* Bio */}
                 {(isOwn || profileUser.bio) && (
-                  <div style={{ background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '14px', padding: '12px 14px', marginBottom: '20px', textAlign: 'left' }}>
+                  <div style={isOwn
+                    ? { background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '14px', padding: '12px 14px', marginBottom: '20px', textAlign: 'left' }
+                    : { marginBottom: '20px', textAlign: 'center' }
+                  }>
                     <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#6B5BA0', margin: isOwn ? '0 0 8px 0' : 0, whiteSpace: 'pre-wrap' }}>
                       {profileUser.bio || 'No bio yet.'}
                     </p>
