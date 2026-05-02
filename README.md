@@ -12,20 +12,42 @@ micro-poems, brief stories, inspirational thoughts, and creative prompts.
 | Ashley Danoy    | 202304384 | Posts (Create, Like, Comment)     |
 | Jawairia Ahmed  | 202208287 | User Profile                      |
 
+## Current App
+
+The Phase 2 Next.js app is inside the `creativo/` folder.
+
+Run it from the repo root with:
+
+```bash
+npm run install:app
+npm run dev
+```
+
+Or run it directly:
+
+```bash
+cd creativo
+npm install
+npm run dev
+```
+
+Then open:
+
+```text
+http://localhost:3000
+```
+
 ## Tech Stack
-- HTML5
-- CSS3 (Flexbox & Grid)
-- Vanilla JavaScript (ES6+)
-- localStorage for data persistence
+- Next.js
+- React
+- Prisma
+- SQLite
 
 ## Project Structure
-- `index.html`:  Landing/Login page
-- `register.html`:  Registration page
-- `feed.html`:  News Feed
-- `profile.html`:  User Profile
-- `css/`:  Stylesheets
-- `js/`: JavaScript logic
-- `assets/`:  Images and icons
+- `creativo/`: Phase 2 Next.js application
+- `creativo/prisma/dev.db`: Shared SQLite database for the class project
+- `creativo/.env`: Local database URL for SQLite
+- `Phae 1 submissions/`: Phase 1 submission files
 
 ## Course
 CMPS 350: Web DevelopmentCMPS350 Spring2026 Course Project 

@@ -1,0 +1,5 @@
+{
+  "installCommand": "npm --prefix creativo install",
+  "buildCommand": "npm --prefix creativo run build",
+  "outputDirectory": "creativo/.next"
+}

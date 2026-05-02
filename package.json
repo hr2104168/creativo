@@ -1,0 +1,10 @@
+{
+  "name": "creativo-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix creativo run dev",
+    "build": "npm --prefix creativo run build",
+    "start": "npm --prefix creativo run start",
+    "install:app": "npm --prefix creativo install"
+  }
+}
