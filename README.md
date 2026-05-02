@@ -42,6 +42,16 @@ Output Directory: empty
 Root Directory: empty / repository root
 ```
 
+## Phase 1 Archive
+
+The original static HTML/CSS/JS version is preserved in:
+
+```text
+phase1-archive/
+```
+
+It is kept separate so Vercel deploys the Phase 2 Next.js app from the repository root.
+
 ## Team Members
 
 | Name            |   QUID    | Role                              |
