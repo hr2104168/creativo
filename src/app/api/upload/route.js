@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/session';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
 const MAX_SIZE   = 2 * 1024 * 1024;
 const ALLOWED    = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
@@ -25,13 +22,10 @@ export async function POST(request) {
     if (bytes.byteLength > MAX_SIZE)
       return NextResponse.json({ error: 'File must be under 2 MB.' }, { status: 400 });
 
-    const ext      = file.type.split('/')[1].replace('jpeg', 'jpg');
-    const filename = `${currentUser.id}_${Date.now()}.${ext}`;
+    const base64 = Buffer.from(bytes).toString('base64');
+    const url = `data:${file.type};base64,${base64}`;
 
-    await mkdir(UPLOAD_DIR, { recursive: true });
-    await writeFile(path.join(UPLOAD_DIR, filename), Buffer.from(bytes));
-
-    return NextResponse.json({ url: `/uploads/${filename}` }, { status: 201 });
+    return NextResponse.json({ url }, { status: 201 });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: 'Upload failed.' }, { status: 500 });
