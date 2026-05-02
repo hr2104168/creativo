@@ -81,6 +81,10 @@ textarea {
   text-align: center;
 }
 
+.auth-mobile-brand {
+  display: none;
+}
+
 @media (max-width: 1080px) {
   .feed-layout {
     grid-template-columns: 200px minmax(0, 1fr) !important;
@@ -130,6 +134,31 @@ textarea {
 
   .auth-form-wrap {
     max-width: 520px !important;
+  }
+
+  .auth-left-panel {
+    display: none !important;
+  }
+
+  .auth-right-panel {
+    min-height: 100dvh !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 32px 20px !important;
+  }
+
+  .auth-form-wrap {
+    max-width: 420px !important;
+    margin: 0 auto !important;
+  }
+
+  .auth-mobile-brand {
+    display: block;
+    margin: 0 0 28px;
+    color: #3C3489;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
   }
 
   .app-nav {

@@ -83,6 +83,7 @@ export default function RegisterPage() {
             <div className="auth-right-panel" style={styles.rightPanel}>
                 <div className="auth-form-wrap" style={styles.formWrap}>
 
+                    <div className="auth-mobile-brand">✦ Creativo</div>
                     <h2 className="auth-heading" style={styles.heading}>Join Creativo</h2>
                     <p className="auth-sub" style={styles.sub}>
                         Already have an account?{' '}

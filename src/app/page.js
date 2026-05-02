@@ -60,6 +60,7 @@ export default function LoginPage() {
       <div className="auth-right-panel" style={styles.rightPanel}>
         <div className="auth-form-wrap" style={styles.formWrap}>
 
+          <div className="auth-mobile-brand">✦ Creativo</div>
           <h2 className="auth-heading" style={styles.heading}>Welcome back</h2>
           <p className="auth-sub" style={styles.sub}>
             Don't have an account?{' '}
