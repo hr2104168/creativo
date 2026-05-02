@@ -41,9 +41,9 @@ export default function StatsPage() {
 
   return (
     <div style={styles.page}>
-      <nav style={styles.nav}>
+      <nav className="app-nav stats-nav" style={styles.nav}>
         <Link href="/feed" style={styles.brand}>✦ Creativo</Link>
-        <div style={styles.navLinks}>
+        <div className="app-nav-actions stats-nav-links" style={styles.navLinks}>
           <Link href="/feed" style={styles.navLink}>Feed</Link>
           {currentUser && (
             <Link href={`/profile/${currentUser.id}`} style={styles.navLink}>
@@ -54,7 +54,7 @@ export default function StatsPage() {
         </div>
       </nav>
 
-      <main style={styles.main}>
+      <main className="stats-main" style={styles.main}>
         <div style={styles.header}>
           <p style={styles.eyebrow}>PLATFORM STATISTICS</p>
           <h1 style={styles.title}>Creativo at a glance</h1>

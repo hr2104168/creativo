@@ -35,45 +35,46 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={styles.page}>
+    <div className="auth-page" style={styles.page}>
 
       {/* LEFT PANEL */}
-      <div style={styles.leftPanel}>
+      <div className="auth-left-panel" style={styles.leftPanel}>
         <div style={styles.brand}>
-          <span style={styles.brandName}>✦ Creativo</span>
+          <span className="auth-brand-name" style={styles.brandName}>✦ Creativo</span>
         </div>
-        <div style={styles.quote}>
-          <span style={styles.quoteMark}>"</span>
-          <p style={styles.quoteText}>
+        <div className="auth-quote" style={styles.quote}>
+          <span className="auth-quote-mark" style={styles.quoteMark}>"</span>
+          <p className="auth-quote-text" style={styles.quoteText}>
             Poetry is when an emotion has found its thought and the thought has found words.
           </p>
-          <p style={styles.quoteAuthor}>— Robert Frost</p>
+          <p className="auth-quote-author" style={styles.quoteAuthor}>— Robert Frost</p>
         </div>
-        <div style={styles.tags}>
+        <div className="auth-tags" style={styles.tags}>
           {['Poetry', 'Story', 'Art Idea', 'Prompt', 'Motivation'].map(t => (
-            <span key={t} style={styles.tag}>{t}</span>
+            <span className="auth-tag" key={t} style={styles.tag}>{t}</span>
           ))}
         </div>
       </div>
 
       {/* RIGHT PANEL */}
-      <div style={styles.rightPanel}>
-        <div style={styles.formWrap}>
+      <div className="auth-right-panel" style={styles.rightPanel}>
+        <div className="auth-form-wrap" style={styles.formWrap}>
 
-          <h2 style={styles.heading}>Welcome back</h2>
-          <p style={styles.sub}>
+          <h2 className="auth-heading" style={styles.heading}>Welcome back</h2>
+          <p className="auth-sub" style={styles.sub}>
             Don't have an account?{' '}
-            <Link href="/register" style={styles.link}>Create one</Link>
+            <Link className="auth-link" href="/register" style={styles.link}>Create one</Link>
           </p>
 
-          {error && <div style={styles.errorBox}>{error}</div>}
+          {error && <div className="auth-message" style={styles.errorBox}>{error}</div>}
 
           <form onSubmit={handleSubmit} noValidate>
 
-            <div style={styles.field}>
-              <label style={styles.label}>Email</label>
+            <div className="auth-field" style={styles.field}>
+              <label className="auth-label" style={styles.label}>Email</label>
               <input
                 type="email"
+                className="auth-input"
                 style={styles.input}
                 placeholder="name@example.com"
                 value={email}
@@ -81,10 +82,11 @@ export default function LoginPage() {
               />
             </div>
 
-            <div style={styles.field}>
-              <label style={styles.label}>Password</label>
+            <div className="auth-field" style={styles.field}>
+              <label className="auth-label" style={styles.label}>Password</label>
               <input
                 type="password"
+                className="auth-input"
                 style={styles.input}
                 placeholder="••••••••"
                 value={password}
@@ -94,6 +96,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
+              className="auth-submit"
               style={loading ? { ...styles.submitBtn, opacity: 0.7 } : styles.submitBtn}
               disabled={loading}
             >
@@ -102,7 +105,7 @@ export default function LoginPage() {
 
           </form>
 
-          <p style={styles.footer}>
+          <p className="auth-footer" style={styles.footer}>
             By signing in you agree to our Terms of Service.
           </p>
 

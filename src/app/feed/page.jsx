@@ -58,7 +58,7 @@ function Avatar({ user, size = 40 }) {
 
 function Toast({ message, type }) {
     return (
-        <div style={{
+        <div className="app-toast" style={{
             position: 'fixed', bottom: '28px', left: '50%',
             transform: 'translateX(-50%)',
             background: type === 'error' ? '#E07070' : '#7F77DD',
@@ -426,11 +426,11 @@ export default function FeedPage() {
         <div style={{ minHeight: '100vh', background: '#F5F0FF' }}>
 
             {/* NAVBAR */}
-            <nav style={nav.bar}>
-                <div style={nav.inner}>
+            <nav className="app-nav" style={nav.bar}>
+                <div className="app-nav-inner" style={nav.inner}>
                     <Link href="/feed" style={nav.brand}>✦ Creativo</Link>
 
-                    <div style={nav.searchWrap}>
+                    <div className="app-search-wrap" style={nav.searchWrap}>
                         <input
                             type="search"
                             placeholder="Search creators…"
@@ -473,7 +473,7 @@ export default function FeedPage() {
                         )}
                     </div>
 
-                    <div style={nav.actions}>
+                    <div className="app-nav-actions" style={nav.actions}>
                         <Link href="/stats" style={nav.statsBtn}>Stats</Link>
                         <Link href={`/profile/${currentUser.id}`} style={nav.profileBtn}>
                             <Avatar user={currentUser} size={32} />
@@ -487,10 +487,10 @@ export default function FeedPage() {
             </nav>
 
             {/* LAYOUT */}
-            <div style={layout.wrap}>
+            <div className="feed-layout" style={layout.wrap}>
 
                 {/* LEFT SIDEBAR */}
-                <aside style={layout.sidebar}>
+                <aside className="feed-sidebar" style={layout.sidebar}>
                     <span style={sidebar.sectionTitle}>BROWSE</span>
                     <button
                         style={activeFilter === 'all' ? sidebar.btnActive : sidebar.btn}
@@ -512,10 +512,10 @@ export default function FeedPage() {
                 </aside>
 
                 {/* MAIN FEED */}
-                <main style={layout.main}>
+                <main className="feed-main" style={layout.main}>
 
                     {/* TABS */}
-                    <div style={feed.tabs}>
+                    <div className="feed-tabs" style={feed.tabs}>
                         <button
                             style={activeTab === 'feed' ? feed.tabActive : feed.tab}
                             onClick={() => setActiveTab('feed')}
@@ -537,8 +537,8 @@ export default function FeedPage() {
                     </div>
 
                     {/* POST CREATION */}
-                    <div style={create.card}>
-                        <div style={create.header}>
+                    <div className="app-card create-card" style={create.card}>
+                        <div className="create-header" style={create.header}>
                             <Avatar user={currentUser} size={40} />
                             <textarea
                                 style={create.textarea}
@@ -557,7 +557,7 @@ export default function FeedPage() {
                                 </button>
                             </div>
                         )}
-                        <div style={create.footer}>
+                        <div className="create-footer" style={create.footer}>
                             <div style={create.catBtns}>
                                 {Object.entries(CATEGORIES).map(([key, cat]) => (
                                     <button
@@ -575,7 +575,7 @@ export default function FeedPage() {
                                     </button>
                                 ))}
                             </div>
-                            <div style={create.actions}>
+                            <div className="create-actions" style={create.actions}>
                                 {isArtIdea && (
                                     <label style={create.uploadBtn}>
                                         Show your art
@@ -626,7 +626,7 @@ export default function FeedPage() {
                             const commentsOpen = openComments[post.id]
 
                             return (
-                                <div key={post.id} style={card.wrap}>
+                                <div className="app-card post-card" key={post.id} style={card.wrap}>
 
                                     {/* CARD HEADER */}
                                     <div style={card.header}>
@@ -666,8 +666,8 @@ export default function FeedPage() {
                                     )}
 
                                     {/* FOOTER */}
-                                    <div style={card.footer}>
-                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                    <div className="post-footer" style={card.footer}>
+                                        <div className="post-action-group" style={{ display: 'flex', gap: '4px' }}>
                                             <button
                                                 style={{
                                                     ...card.reactionBtn,
@@ -691,7 +691,7 @@ export default function FeedPage() {
                                                 ⭐ {appreciateCount}
                                             </button>
                                         </div>
-                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                        <div className="post-action-group" style={{ display: 'flex', gap: '4px' }}>
                                             <button
                                                 style={{
                                                     ...card.bookmarkBtn,
@@ -734,7 +734,7 @@ export default function FeedPage() {
                                                     )}
                                                 </div>
                                             ))}
-                                            <div style={comments.form}>
+                                            <div className="comment-form" style={comments.form}>
                                                 <Avatar user={currentUser} size={32} />
                                                 <input
                                                     style={comments.input}
@@ -758,7 +758,7 @@ export default function FeedPage() {
                 </main>
 
                 {/* RIGHT SIDEBAR — Discover Creators */}
-                <aside style={layout.discoverSidebar}>
+                <aside className="discover-sidebar" style={layout.discoverSidebar}>
                     <h3 style={discover.title}>Suggested Creators</h3>
                     {users.map(u => (
                         <div key={u.id} style={discover.card}>

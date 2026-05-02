@@ -60,44 +60,45 @@ export default function RegisterPage() {
     }
 
     return (
-        <div style={styles.page}>
+        <div className="auth-page" style={styles.page}>
 
             {/* LEFT PANEL */}
-            <div style={styles.leftPanel}>
+            <div className="auth-left-panel" style={styles.leftPanel}>
                 <div>
-                    <span style={styles.brandName}>✦ Creativo</span>
+                    <span className="auth-brand-name" style={styles.brandName}>✦ Creativo</span>
                 </div>
-                <div style={styles.quote}>
-                    <span style={styles.quoteMark}>"</span>
-                    <p style={styles.quoteText}>Fill your paper with the breathings of your heart.</p>
-                    <p style={styles.quoteAuthor}>— William Wordsworth</p>
+                <div className="auth-quote" style={styles.quote}>
+                    <span className="auth-quote-mark" style={styles.quoteMark}>"</span>
+                    <p className="auth-quote-text" style={styles.quoteText}>Fill your paper with the breathings of your heart.</p>
+                    <p className="auth-quote-author" style={styles.quoteAuthor}>— William Wordsworth</p>
                 </div>
-                <div style={styles.tags}>
+                <div className="auth-tags" style={styles.tags}>
                     {['poetry', 'storytelling', 'inspiration', 'prompts', 'reflection'].map(t => (
-                        <span key={t} style={styles.tag}>{t}</span>
+                        <span className="auth-tag" key={t} style={styles.tag}>{t}</span>
                     ))}
                 </div>
             </div>
 
             {/* RIGHT PANEL */}
-            <div style={styles.rightPanel}>
-                <div style={styles.formWrap}>
+            <div className="auth-right-panel" style={styles.rightPanel}>
+                <div className="auth-form-wrap" style={styles.formWrap}>
 
-                    <h2 style={styles.heading}>Join Creativo</h2>
-                    <p style={styles.sub}>
+                    <h2 className="auth-heading" style={styles.heading}>Join Creativo</h2>
+                    <p className="auth-sub" style={styles.sub}>
                         Already have an account?{' '}
-                        <Link href="/" style={styles.link}>Sign in</Link>
+                        <Link className="auth-link" href="/" style={styles.link}>Sign in</Link>
                     </p>
 
-                    {error && <div style={styles.errorBox}>{error}</div>}
-                    {success && <div style={styles.successBox}>{success}</div>}
+                    {error && <div className="auth-message" style={styles.errorBox}>{error}</div>}
+                    {success && <div className="auth-message" style={styles.successBox}>{success}</div>}
 
                     <form onSubmit={handleSubmit} noValidate>
 
-                        <div style={styles.field}>
-                            <label style={styles.label}>Username</label>
+                        <div className="auth-field" style={styles.field}>
+                            <label className="auth-label" style={styles.label}>Username</label>
                             <input
                                 type="text"
+                                className="auth-input"
                                 style={styles.input}
                                 placeholder="e.g. creativo_mind"
                                 value={username}
@@ -106,10 +107,11 @@ export default function RegisterPage() {
                             <p style={styles.hint}>This is how others will see you.</p>
                         </div>
 
-                        <div style={styles.field}>
-                            <label style={styles.label}>Email</label>
+                        <div className="auth-field" style={styles.field}>
+                            <label className="auth-label" style={styles.label}>Email</label>
                             <input
                                 type="email"
+                                className="auth-input"
                                 style={styles.input}
                                 placeholder="name@example.com"
                                 value={email}
@@ -117,10 +119,11 @@ export default function RegisterPage() {
                             />
                         </div>
 
-                        <div style={styles.field}>
-                            <label style={styles.label}>Password</label>
+                        <div className="auth-field" style={styles.field}>
+                            <label className="auth-label" style={styles.label}>Password</label>
                             <input
                                 type="password"
+                                className="auth-input"
                                 style={styles.input}
                                 placeholder="••••••••"
                                 value={password}
@@ -141,10 +144,11 @@ export default function RegisterPage() {
                             </p>
                         </div>
 
-                        <div style={styles.field}>
-                            <label style={styles.label}>Confirm Password</label>
+                        <div className="auth-field" style={styles.field}>
+                            <label className="auth-label" style={styles.label}>Confirm Password</label>
                             <input
                                 type="password"
+                                className="auth-input"
                                 style={styles.input}
                                 placeholder="••••••••"
                                 value={confirm}
@@ -154,6 +158,7 @@ export default function RegisterPage() {
 
                         <button
                             type="submit"
+                            className="auth-submit"
                             style={loading ? { ...styles.submitBtn, opacity: 0.7 } : styles.submitBtn}
                             disabled={loading}
                         >
@@ -162,7 +167,7 @@ export default function RegisterPage() {
 
                     </form>
 
-                    <p style={styles.footer}>
+                    <p className="auth-footer" style={styles.footer}>
                         By joining you agree to our Terms of Service.
                     </p>
 

@@ -58,7 +58,7 @@ function Avatar({ user, size = 40 }) {
 
 function Toast({ message, type }) {
   return (
-    <div style={{
+    <div className="app-toast" style={{
       position: 'fixed', bottom: '28px', left: '50%',
       transform: 'translateX(-50%)',
       background: type === 'error' ? '#E07070' : '#7F77DD',
@@ -582,12 +582,12 @@ export default function ProfilePage() {
     <div style={{ minHeight: '100vh', background: '#F5F0FF' }}>
 
       {/* NAVBAR */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, height: '64px', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(127,119,221,0.18)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', width: '100%', padding: '0 24px', gap: '16px' }}>
+      <nav className="app-nav" style={{ position: 'sticky', top: 0, zIndex: 100, height: '64px', display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(127,119,221,0.18)' }}>
+        <div className="app-nav-inner" style={{ display: 'flex', alignItems: 'center', width: '100%', padding: '0 24px', gap: '16px' }}>
           <Link href="/feed" style={{ fontSize: '20px', fontWeight: '600', color: '#3C3489', fontFamily: "'Cormorant Garamond', serif", flexShrink: 0, textDecoration: 'none' }}>
             ✦ Creativo
           </Link>
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="app-nav-actions" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Link href="/stats" style={{ padding: '8px 14px', borderRadius: '9999px', color: '#6B5BA0', background: '#FAF7FF', border: '1px solid rgba(127,119,221,0.18)', textDecoration: 'none', fontSize: '14px', fontWeight: '500' }}>
               Stats
             </Link>
@@ -603,12 +603,12 @@ export default function ProfilePage() {
       </nav>
 
       {/* PAGE CONTAINER */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '28px', alignItems: 'start' }}>
+      <div className="profile-container" style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
+        <div className="profile-grid" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '28px', alignItems: 'start' }}>
 
           {/* LEFT — Profile Card */}
-          <aside style={{ position: 'sticky', top: '88px' }}>
-            <div style={{ background: '#fff', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '28px', padding: '28px 24px', boxShadow: '0 1px 4px rgba(100,60,180,0.08)' }}>
+          <aside className="profile-sidebar" style={{ position: 'sticky', top: '88px' }}>
+            <div className="app-card profile-card" style={{ background: '#fff', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '28px', padding: '28px 24px', boxShadow: '0 1px 4px rgba(100,60,180,0.08)' }}>
 
               {/* Avatar */}
               <div style={{ textAlign: 'center', marginBottom: '20px', position: 'relative', display: 'inline-block', width: '100%' }}>
@@ -718,7 +718,7 @@ export default function ProfilePage() {
           </aside>
 
           {/* RIGHT — Posts */}
-          <main>
+          <main className="profile-main">
             <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.4rem', fontWeight: '400', color: '#2C2C2A', marginBottom: '20px' }}>
               {isOwn ? '✨ My Creations' : `✨ ${profileUser.username}'s Posts`}
             </h2>
@@ -748,7 +748,7 @@ export default function ProfilePage() {
                 const commentsOpen = openComments[post.id]
 
                 return (
-                  <div key={post.id} style={{ background: '#fff', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '28px', padding: '20px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(100,60,180,0.08)' }}>
+                  <div className="app-card post-card" key={post.id} style={{ background: '#fff', border: '1px solid rgba(127,119,221,0.18)', borderRadius: '28px', padding: '20px', marginBottom: '16px', boxShadow: '0 1px 4px rgba(100,60,180,0.08)' }}>
 
                     {/* Post Header */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -786,8 +786,8 @@ export default function ProfilePage() {
                     )}
 
                     {/* Post Footer */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid rgba(127,119,221,0.18)', marginTop: '8px' }}>
-                      <div style={{ display: 'flex', gap: '4px' }}>
+                    <div className="post-footer" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid rgba(127,119,221,0.18)', marginTop: '8px' }}>
+                      <div className="post-action-group" style={{ display: 'flex', gap: '4px' }}>
                         <button
                           onClick={() => handleReact(post.id, 'inspire')}
                           style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '6px 12px', borderRadius: '9999px', fontSize: '13px', fontWeight: '500', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", background: userReaction?.type === 'inspire' ? '#fde8ee' : 'transparent', color: userReaction?.type === 'inspire' ? '#E07090' : '#6B5BA0', border: userReaction?.type === 'inspire' ? '1.5px solid #f8c0ce' : '1.5px solid transparent' }}
@@ -801,7 +801,7 @@ export default function ProfilePage() {
                           ⭐ {appreciateCount}
                         </button>
                       </div>
-                      <div style={{ display: 'flex', gap: '4px' }}>
+                      <div className="post-action-group" style={{ display: 'flex', gap: '4px' }}>
                         <button
                           onClick={() => handleBookmark(post.id)}
                           style={{
@@ -844,7 +844,7 @@ export default function ProfilePage() {
                             )}
                           </div>
                         ))}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                        <div className="comment-form" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
                           <Avatar user={currentUser} size={32} />
                           <input
                             style={{ flex: 1, padding: '8px 14px', border: '1.5px solid rgba(127,119,221,0.18)', borderRadius: '9999px', fontSize: '13px', color: '#231647', background: '#fff', outline: 'none', fontFamily: "'DM Sans', sans-serif" }}
